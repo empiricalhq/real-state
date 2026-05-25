@@ -22,12 +22,14 @@ const Properties: React.FC = () => {
             Curated homes where elegance, style, and comfort unite.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
-          {propertyHomes.slice(0, 6).map((item, index) => (
-            <div key={index} className="">
-              <PropertyCard item={item} />
-            </div>
-          ))}
+        <div className="@container">
+          <div className="grid grid-cols-1 gap-10 @md:grid-cols-2 @xl:grid-cols-3">
+            {propertyHomes.slice(0, 6).map((item, index) => (
+              <div key={index}>
+                <PropertyCard item={item} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
