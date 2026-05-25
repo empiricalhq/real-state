@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Bricolage_Grotesque } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Footer from "@/components/Layout/Footer";
 import Header from "@/components/Layout/Header";
@@ -37,6 +38,7 @@ export default function RootLayout({
             <Footer />
           </ThemeProvider>
         </SessionProviderComp>
+        <SpeedInsights />
       </body>
     </html>
   );
