@@ -48,16 +48,16 @@ const FeaturedProperty: React.FC = () => {
               <CarouselContent>
                 {featuredProprty.map((item, index) => (
                   <CarouselItem key={index}>
-                    <Image
-                      src={item.scr}
-                      alt={item.alt}
-                      width={680}
-                      height={530}
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="rounded-2xl"
-                      style={{ width: "100%", height: "auto" }}
-                      unoptimized={true}
-                    />
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                      <Image
+                        src={item.scr}
+                        alt={item.alt}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        unoptimized={true}
+                      />
+                    </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -104,7 +104,7 @@ const FeaturedProperty: React.FC = () => {
                     src={"/images/hero/sofa.svg"}
                     alt="sofa"
                     width={24}
-                    height={24}
+                    height={25}
                     className="block dark:hidden"
                     unoptimized={true}
                   />
@@ -112,7 +112,7 @@ const FeaturedProperty: React.FC = () => {
                     src={"/images/hero/dark-sofa.svg"}
                     alt="sofa"
                     width={24}
-                    height={24}
+                    height={19}
                     className="hidden dark:block"
                     unoptimized={true}
                   />
@@ -125,7 +125,7 @@ const FeaturedProperty: React.FC = () => {
                     src={"/images/hero/tube.svg"}
                     alt="tube"
                     width={24}
-                    height={24}
+                    height={25}
                     className="block dark:hidden"
                     unoptimized={true}
                   />
@@ -133,7 +133,7 @@ const FeaturedProperty: React.FC = () => {
                     src={"/images/hero/dark-tube.svg"}
                     alt="tube"
                     width={24}
-                    height={24}
+                    height={25}
                     className="hidden dark:block"
                     unoptimized={true}
                   />

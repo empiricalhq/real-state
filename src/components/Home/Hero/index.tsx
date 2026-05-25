@@ -43,7 +43,7 @@ const Hero: React.FC = () => {
                 src={"/images/hero/sofa.svg"}
                 alt="sofa"
                 width={32}
-                height={32}
+                height={33}
                 className="block dark:hidden"
                 unoptimized={true}
               />
@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
                 src={"/images/hero/dark-sofa.svg"}
                 alt="sofa"
                 width={32}
-                height={32}
+                height={25}
                 className="hidden dark:block"
                 unoptimized={true}
               />
@@ -62,7 +62,7 @@ const Hero: React.FC = () => {
                 src={"/images/hero/tube.svg"}
                 alt="sofa"
                 width={32}
-                height={32}
+                height={33}
                 className="block dark:hidden"
                 unoptimized={true}
               />
@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
                 src={"/images/hero/dark-tube.svg"}
                 alt="sofa"
                 width={32}
-                height={32}
+                height={33}
                 className="hidden dark:block"
                 unoptimized={true}
               />
