@@ -97,7 +97,7 @@ const Testimonial = () => {
                       alt={item.name}
                       width={440}
                       height={440}
-                      className="hidden lg:block"
+                      className="not-lg:hidden"
                       unoptimized={true}
                     />
                   </div>
