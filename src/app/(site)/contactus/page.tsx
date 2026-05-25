@@ -104,13 +104,11 @@ export default function ContactUs() {
                   className="outline-primary rounded-full border border-black/10 px-6 py-3.5 focus:outline dark:border-white/10"
                 />
                 <textarea
-                  rows={8}
-                  cols={50}
                   name="message"
                   id="message"
                   placeholder="Write here your message"
                   required
-                  className="outline-primary rounded-2xl border border-black/10 px-6 py-3.5 focus:outline dark:border-white/10"
+                  className="outline-primary field-sizing-content min-h-48 rounded-2xl border border-black/10 px-6 py-3.5 focus:outline dark:border-white/10"
                 ></textarea>
                 <button className="bg-primary mobile:w-fit hover:bg-dark w-full rounded-full px-8 py-4 text-base font-semibold text-white duration-300 hover:cursor-pointer">
                   Send message
