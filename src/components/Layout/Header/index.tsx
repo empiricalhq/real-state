@@ -88,7 +88,7 @@ const Header: React.FC = () => {
                 className="hidden text-white dark:block"
               />
             </button>
-            <div className={`hidden md:block`}>
+            <div className="not-md:hidden">
               <Link
                 href="#"
                 className={`flex items-center gap-2 border-r pr-6 text-base text-inherit ${
@@ -118,14 +118,16 @@ const Header: React.FC = () => {
                 <span>
                   <Icon icon={"ph:list"} width={24} height={24} />
                 </span>
-                <span className="hidden sm:block">Menu</span>
+                <span className="not-sm:hidden">Menu</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {navbarOpen && <div className="fixed top-0 left-0 z-40 h-full w-full bg-black/50" />}
+      {navbarOpen && (
+        <div className="fixed top-0 left-0 z-40 h-full w-full bg-black/50 transition-opacity duration-300 starting:opacity-0" />
+      )}
 
       <div
         ref={sideMenuRef}

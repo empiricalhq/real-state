@@ -4,7 +4,7 @@ import Link from "next/link";
 const Hero: React.FC = () => {
   return (
     <section className="py-0!">
-      <div className="from-skyblue via-lightskyblue relative overflow-hidden bg-linear-to-b to-white/10 dark:via-[#4298b0] dark:to-black/10">
+      <div className="from-skyblue via-lightskyblue relative overflow-hidden bg-linear-to-b/oklch to-white/10 dark:via-[#4298b0] dark:to-black/10">
         <div className="max-w-8xl container mx-auto px-5 pt-32 md:pt-60 md:pb-68 2xl:px-0">
           <div className="dark:text-dark relative z-10 text-center text-white md:text-start">
             <p className="text-xm font-medium text-inherit">Palm springs, CA</p>
@@ -23,7 +23,7 @@ const Hero: React.FC = () => {
               </button>
             </div>
           </div>
-          <div className="absolute -top-2 -right-68 hidden md:block">
+          <div className="absolute -top-2 -right-68 not-md:hidden">
             <Image
               src={"/images/hero/heroBanner.png"}
               alt="heroImg"
