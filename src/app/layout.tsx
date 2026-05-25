@@ -18,16 +18,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  session,
 }: Readonly<{
   children: React.ReactNode;
-  session: any;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="color-scheme-light dark:color-scheme-dark" data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className="color-scheme-light dark:color-scheme-dark"
+      data-scroll-behavior="smooth"
+    >
       <body className={`${font.className} bg-white antialiased dark:bg-black`}>
         <NextTopLoader color="#07be8a" />
-        <SessionProviderComp session={session}>
+        <SessionProviderComp>
           <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
             <Header />
             {children}
