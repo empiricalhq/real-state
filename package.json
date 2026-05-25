@@ -2,11 +2,15 @@
   "name": "homely-nextjs",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
@@ -33,14 +37,14 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25.9.1",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "@types/react-slick": "^0.23.13",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.0-canary.28",
+    "oxfmt": "^0.51.0",
+    "oxlint": "^1.66.0",
+    "oxlint-tsgolint": "^0.23.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
