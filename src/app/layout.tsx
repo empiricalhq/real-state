@@ -24,7 +24,7 @@ export default function RootLayout({
   session: any;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="color-scheme-light dark:color-scheme-dark">
+    <html lang="en" suppressHydrationWarning className="color-scheme-light dark:color-scheme-dark" data-scroll-behavior="smooth">
       <body className={`${font.className} bg-white antialiased dark:bg-black`}>
         <NextTopLoader color="#07be8a" />
         <SessionProviderComp session={session}>
