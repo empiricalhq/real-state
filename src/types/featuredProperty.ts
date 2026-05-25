@@ -1,4 +1,4 @@
 export type FeaturedProperty = {
-    scr: string
-    alt: string
-}
+  scr: string;
+  alt: string;
+};

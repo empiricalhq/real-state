@@ -1,6 +1,5 @@
-import React from "react";
 import { signIn } from "next-auth/react";
-
+import React from "react";
 
 const SocialSignIn = () => {
   const handleGoogleSignIn = async () => {
@@ -14,7 +13,7 @@ const SocialSignIn = () => {
       <div className="flex gap-4">
         <button
           onClick={handleGoogleSignIn}
-          className="flex w-full items-center justify-center gap-2.5 rounded-2xl border border-black/10 dark:border-white/20 p-3.5 text-dark duration-200 ease-in dark:text-white dark:hover:bg-primary/10 hover:!bg-primary/10"
+          className="text-dark dark:hover:bg-primary/10 hover:!bg-primary/10 flex w-full items-center justify-center gap-2.5 rounded-2xl border border-black/10 p-3.5 duration-200 ease-in dark:border-white/20 dark:text-white"
         >
           Sign In
           <svg
@@ -44,12 +43,7 @@ const SocialSignIn = () => {
             </g>
             <defs>
               <clipPath id="clip0_709_8846">
-                <rect
-                  width="22"
-                  height="22"
-                  fill="white"
-                  transform="translate(0.5)"
-                />
+                <rect width="22" height="22" fill="white" transform="translate(0.5)" />
               </clipPath>
             </defs>
           </svg>
@@ -57,7 +51,7 @@ const SocialSignIn = () => {
 
         <button
           onClick={handleGithubSignIn}
-          className="flex w-full items-center justify-center gap-2.5 rounded-2xl border border-black/10 dark:border-white/20 p-3.5 text-dark duration-200 ease-in dark:text-white dark:hover:bg-primary/10 hover:bg-primary/10"
+          className="text-dark dark:hover:bg-primary/10 hover:bg-primary/10 flex w-full items-center justify-center gap-2.5 rounded-2xl border border-black/10 p-3.5 duration-200 ease-in dark:border-white/20 dark:text-white"
         >
           Sign In
           <svg

@@ -1,66 +1,88 @@
+import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { Icon } from "@iconify/react"
+
 import { FooterLinks } from "@/app/api/footerlinks";
 
 const Footer = () => {
   return (
-    <footer className="relative z-10 bg-dark">
-      <div className="container mx-auto max-w-8xl pt-14 px-4 sm:px-6 lg:px-0">
-        <div className="flex lg:items-center justify-between items-end lg:gap-11 pb-14 border-b border-white/10 lg:flex-nowrap flex-wrap gap-6">
-          <p className="text-white text-sm lg:max-w-1/5">
-            Stay updated with the latest news,
-            promotions, and exclusive offers.
+    <footer className="bg-dark relative z-10">
+      <div className="max-w-8xl container mx-auto px-4 pt-14 sm:px-6 lg:px-0">
+        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-white/10 pb-14 lg:flex-nowrap lg:items-center lg:gap-11">
+          <p className="text-sm text-white lg:max-w-1/5">
+            Stay updated with the latest news, promotions, and exclusive offers.
           </p>
-          <div className="flex lg:flex-row flex-col items-center lg:gap-10 gap-3">
-            <div className="flex gap-2 lg:order-1 order-2">
-              <input type="email" placeholder="Enter Your Email" className="rounded-full py-4 px-6 bg-white/10 placeholder:text-white text-white focus-visible:outline-0" />
-              <button className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer">
+          <div className="flex flex-col items-center gap-3 lg:flex-row lg:gap-10">
+            <div className="order-2 flex gap-2 lg:order-1">
+              <input
+                type="email"
+                placeholder="Enter Your Email"
+                className="rounded-full bg-white/10 px-6 py-4 text-white placeholder:text-white focus-visible:outline-0"
+              />
+              <button className="text-dark hover:bg-primary rounded-full bg-white px-8 py-4 font-semibold duration-300 hover:cursor-pointer hover:text-white">
                 Subscribe
               </button>
             </div>
-            <p className="text-white/40 text-sm lg:max-w-[45%] order-1 lg:order-2">
-              By subscribing, you agree to receive our promotional emails. You can unsubscribe  at any time.
+            <p className="order-1 text-sm text-white/40 lg:order-2 lg:max-w-[45%]">
+              By subscribing, you agree to receive our promotional emails. You can unsubscribe at
+              any time.
             </p>
           </div>
           <div className="flex items-center gap-6">
             <Link href="#">
-              <Icon icon="ph:x-logo-bold" width={24} height={24} className="text-white hover:text-primary duration-300" />
+              <Icon
+                icon="ph:x-logo-bold"
+                width={24}
+                height={24}
+                className="hover:text-primary text-white duration-300"
+              />
             </Link>
             <Link href="#">
-              <Icon icon="ph:facebook-logo-bold" width={24} height={24} className="text-white hover:text-primary duration-300" />
+              <Icon
+                icon="ph:facebook-logo-bold"
+                width={24}
+                height={24}
+                className="hover:text-primary text-white duration-300"
+              />
             </Link>
             <Link href="#">
-              <Icon icon="ph:instagram-logo-bold" width={24} height={24} className="text-white hover:text-primary duration-300" />
+              <Icon
+                icon="ph:instagram-logo-bold"
+                width={24}
+                height={24}
+                className="hover:text-primary text-white duration-300"
+              />
             </Link>
           </div>
         </div>
-        <div className="py-16 border-b border-white/10">
-          <div className="grid grid-cols-12 sm:gap-10 gap-y-6">
-            <div className="md:col-span-7 col-span-12">
-              <h2 className="text-white leading-[1.2] text-40 font-medium mb-6 lg:max-w-3/4">
-                Begin your path to
-                success contact us today.
+        <div className="border-b border-white/10 py-16">
+          <div className="grid grid-cols-12 gap-y-6 sm:gap-10">
+            <div className="col-span-12 md:col-span-7">
+              <h2 className="text-40 mb-6 leading-[1.2] font-medium text-white lg:max-w-3/4">
+                Begin your path to success contact us today.
               </h2>
-              <Link href="/contactus" className="bg-primary text-base font-semibold py-4 px-8 rounded-full text-white hover:bg-white hover:text-dark duration-300 hover:cursor-pointer">
+              <Link
+                href="/contactus"
+                className="bg-primary hover:text-dark rounded-full px-8 py-4 text-base font-semibold text-white duration-300 hover:cursor-pointer hover:bg-white"
+              >
                 Get In Touch
               </Link>
             </div>
-            <div className="md:col-span-3 sm:col-span-6 col-span-12">
-              <div className="flex flex-col gap-4 w-fit">
+            <div className="col-span-12 sm:col-span-6 md:col-span-3">
+              <div className="flex w-fit flex-col gap-4">
                 {FooterLinks.slice(0, 4).map((item, index) => (
                   <div key={index}>
-                    <Link href={item.href} className="text-white/40 text-xm hover:text-white">
+                    <Link href={item.href} className="text-xm text-white/40 hover:text-white">
                       {item.label}
                     </Link>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="md:col-span-2 sm:col-span-6 col-span-12">
-              <div className="flex flex-col gap-4 w-fit">
+            <div className="col-span-12 sm:col-span-6 md:col-span-2">
+              <div className="flex w-fit flex-col gap-4">
                 {FooterLinks.slice(4, 8).map((item, index) => (
                   <div key={index}>
-                    <Link href={item.href} className="text-white/40 text-xm hover:text-white">
+                    <Link href={item.href} className="text-xm text-white/40 hover:text-white">
                       {item.label}
                     </Link>
                   </div>
@@ -69,21 +91,28 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between md:flex-nowrap flex-wrap items-center py-6 gap-6">
-          <p className="text-white/40 text-sm ">
-            ©2025 Homely - Design & Developed by <Link href="https://getnextjstemplates.com/" className="hover:text-primary" target="_blanck">GetNextJs Templates</Link>
+        <div className="flex flex-wrap items-center justify-between gap-6 py-6 md:flex-nowrap">
+          <p className="text-sm text-white/40">
+            ©2025 Homely - Design & Developed by{" "}
+            <Link
+              href="https://getnextjstemplates.com/"
+              className="hover:text-primary"
+              target="_blanck"
+            >
+              GetNextJs Templates
+            </Link>
           </p>
-          <div className="flex gap-8 items-center">
-            <Link href="#" className="text-white/40 hover:text-primary text-sm">
+          <div className="flex items-center gap-8">
+            <Link href="#" className="hover:text-primary text-sm text-white/40">
               Terms of service
             </Link>
-            <Link href="#" className="text-white/40 hover:text-primary text-sm">
+            <Link href="#" className="hover:text-primary text-sm text-white/40">
               Privacy policy
             </Link>
           </div>
         </div>
       </div>
-    </footer >
+    </footer>
   );
 };
 

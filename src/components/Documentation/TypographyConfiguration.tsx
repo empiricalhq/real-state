@@ -1,18 +1,21 @@
 export const TypographyConfiguration = () => {
-    return (
-        <>
-            <h3 className=" text-black text-xl font-semibold mt-8 dark:text-white" >Typography</h3>
-            <div className="p-6 rounded-md border mt-4 border-black/10 dark:border-white/20">
-                <p className="text-base font-medium text-midnight_text dark:text-white dark:text-opacity-50" >1. Change Font family over here : <span className="font-semibold text-base">src/app/layout.tsx</span>  </p>
-                <div className="py-4 px-3 rounded-md bg-black mt-8">
-                    <p className="text-sm text-gray-400 flex flex-col gap-2 mb-3">
-                        {`import { Bricolage_Grotesque } from 'next/font/google'`}
-                    </p>
-                    <p className="text-sm text-gray-400 flex flex-col gap-2">
-                        {`const font = Bricolage_Grotesque({ subsets: ["latin"] });`}
-                    </p>
-                </div>
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <h3 className="mt-8 text-xl font-semibold text-black dark:text-white">Typography</h3>
+      <div className="mt-4 rounded-md border border-black/10 p-6 dark:border-white/20">
+        <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
+          1. Change Font family over here :{" "}
+          <span className="text-base font-semibold">src/app/layout.tsx</span>{" "}
+        </p>
+        <div className="mt-8 rounded-md bg-black px-3 py-4">
+          <p className="mb-3 flex flex-col gap-2 text-sm text-gray-400">
+            {`import { Bricolage_Grotesque } from 'next/font/google'`}
+          </p>
+          <p className="flex flex-col gap-2 text-sm text-gray-400">
+            {`const font = Bricolage_Grotesque({ subsets: ["latin"] });`}
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};

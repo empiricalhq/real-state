@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@plugin 'tailwindcss-animate';
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -11,9 +11,11 @@
   --color-dark: #172023;
 
   /* Shadow */
-  --shadow-3xl: 0px 4px 6px -2px #0000000D, 0px 10px 15px -3px #0000001A;
+  --shadow-3xl: 0px 4px 6px -2px #0000000d, 0px 10px 15px -3px #0000001a;
   --shadow-auth: 0 20px 25px -5px #0000001a;
-  --shadow-dark-auth: rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  --shadow-dark-auth:
+    rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 
   /* font size */
   --text-xm: 1.125rem;
@@ -71,10 +73,11 @@ html {
 }
 
 section {
-  @apply py-24
+  @apply py-24;
 }
 
-.blog-details p, .blog-details hr {
+.blog-details p,
+.blog-details hr {
   @apply mb-8;
 }
 
@@ -83,11 +86,11 @@ section {
 }
 
 .blog-details ul {
-  @apply list-none space-y-3 mb-10;
+  @apply mb-10 list-none space-y-3;
 }
 
 .blog-details ul li {
-  @apply mb-0 relative pl-4 text-base leading-[1.2] before:absolute before:w-1 before:h-1 before:rounded-full before:bg-dark dark:before:bg-white/60 before:top-2 before:left-0;
+  @apply before:bg-dark relative mb-0 pl-4 text-base leading-[1.2] before:absolute before:top-2 before:left-0 before:h-1 before:w-1 before:rounded-full dark:before:bg-white/60;
 }
 
 .blog-details ol {
@@ -95,29 +98,29 @@ section {
 }
 
 .blog-details ol li {
-  @apply mb-0
+  @apply mb-0;
 }
 
 .blog-details h1 {
-  @apply mb-8 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.28];
+  @apply text-dark mb-8 text-3xl font-bold sm:text-4xl md:text-[40px] md:leading-[1.28] dark:text-white;
 }
 
 .blog-details h2 {
-  @apply mb-2 text-2xl font-bold text-dark dark:text-white sm:text-3xl md:text-[35px] md:leading-[1.28];
+  @apply text-dark mb-2 text-2xl font-bold sm:text-3xl md:text-[35px] md:leading-[1.28] dark:text-white;
 }
 
 .blog-details h3 {
-  @apply mb-6 text-2xl text-dark dark:text-white sm:leading-[40px];
+  @apply text-dark mb-6 text-2xl sm:leading-[40px] dark:text-white;
 }
 
 .blog-details h4 {
-  @apply mb-6 text-xl leading-[1.2] text-dark dark:text-white;
+  @apply text-dark mb-6 text-xl leading-[1.2] dark:text-white;
 }
 
 .blog-details hr {
-  @apply border-white
+  @apply border-white;
 }
 
 .blog-details p {
-  @apply text-dark dark:text-white text-xm leading-[1.2]
+  @apply text-dark text-xm leading-[1.2] dark:text-white;
 }

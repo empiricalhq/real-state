@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { createContext, useState, ReactNode, Dispatch, SetStateAction } from "react";
 
@@ -18,10 +18,10 @@ interface DonationProviderProps {
 
 // Create a provider component
 export const DonationProvider: React.FC<DonationProviderProps> = ({ children }) => {
-  const [isDonationOpen , setIsDonationOpen] = useState<boolean>(false);
+  const [isDonationOpen, setIsDonationOpen] = useState<boolean>(false);
 
   return (
-    <DonationFormContext.Provider value={{ isDonationOpen , setIsDonationOpen }}>
+    <DonationFormContext.Provider value={{ isDonationOpen, setIsDonationOpen }}>
       {children}
     </DonationFormContext.Provider>
   );

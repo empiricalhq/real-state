@@ -9,7 +9,7 @@ export default defineConfig({
     "react/exhaustive-deps": "warn",
   },
   options: {
-    "typeAware": true,
-    "typeCheck": true,
-  }
+    typeAware: true,
+    typeCheck: true,
+  },
 });

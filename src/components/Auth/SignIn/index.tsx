@@ -3,10 +3,12 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import SocialSignIn from "../SocialSignIn";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+
 import AuthDialogContext from "@/app/context/AuthDialogContext";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
+
+import SocialSignIn from "../SocialSignIn";
 
 const Signin = ({ signInOpen }: { signInOpen?: any }) => {
   const { data: session } = useSession();
@@ -15,9 +17,8 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
   const [error, setError] = useState("");
   const authDialog = useContext(AuthDialogContext);
 
-
   const handleSubmit = async (e: any) => {
-    const notify = () => toast('Here is your toast.');
+    const notify = () => toast("Here is your toast.");
     e.preventDefault();
     const result = await signIn("credentials", {
       redirect: false,
@@ -45,14 +46,14 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
 
   return (
     <>
-      <div className="mb-10 text-center flex justify-center">
+      <div className="mb-10 flex justify-center text-center">
         <Logo />
       </div>
 
       <SocialSignIn />
 
-      <span className="z-1 relative my-8 block text-center">
-        <span className="-z-1 absolute left-0 top-1/2 block h-px w-full bg-black/10 dark:bg-white/20"></span>
+      <span className="relative z-1 my-8 block text-center">
+        <span className="absolute top-1/2 left-0 -z-1 block h-px w-full bg-black/10 dark:bg-white/20"></span>
         <span className="text-body-secondary relative z-10 inline-block bg-white px-3 text-base dark:bg-black">
           OR
         </span>
@@ -67,7 +68,7 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full rounded-2xl border placeholder:text-gray-400 border-black/10 dark:border-white/20 border-solid bg-transparent px-5 py-3 text-base text-dark outline-none transition  focus:border-primary focus-visible:shadow-none dark:border-border_color dark:text-white dark:focus:border-primary"
+            className="text-dark focus:border-primary dark:border-border_color dark:focus:border-primary w-full rounded-2xl border border-solid border-black/10 bg-transparent px-5 py-3 text-base transition outline-none placeholder:text-gray-400 focus-visible:shadow-none dark:border-white/20 dark:text-white"
           />
         </div>
         <div className="mb-[22px]">
@@ -77,29 +78,28 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
             value={password}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-2xl border border-black/10 dark:border-white/20 border-solid bg-transparent px-5 py-3 text-base text-dark outline-none transition  focus:border-primary focus-visible:shadow-none dark:border-border_color dark:text-white dark:focus:border-primary"
+            className="text-dark focus:border-primary dark:border-border_color dark:focus:border-primary w-full rounded-2xl border border-solid border-black/10 bg-transparent px-5 py-3 text-base transition outline-none focus-visible:shadow-none dark:border-white/20 dark:text-white"
           />
         </div>
         <div className="mb-9">
           <button
             type="submit"
-            className="flex w-full cursor-pointer items-center justify-center rounded-2xl border border-primary bg-primary hover:bg-transparent hover:text-primary px-5 py-3 text-base text-white transition duration-300 ease-in-out "
+            className="border-primary bg-primary hover:text-primary flex w-full cursor-pointer items-center justify-center rounded-2xl border px-5 py-3 text-base text-white transition duration-300 ease-in-out hover:bg-transparent"
           >
             Sign In
           </button>
-
         </div>
       </form>
 
       <div className="text-center">
         <Link
           href="/"
-          className="mb-2 text-base text-dark hover:text-primary dark:text-white dark:hover:text-primary"
+          className="text-dark hover:text-primary dark:hover:text-primary mb-2 text-base dark:text-white"
         >
           Forget Password?
         </Link>
       </div>
-      <p className="text-body-secondary text-base text-center">
+      <p className="text-body-secondary text-center text-base">
         Not a member yet?{" "}
         <Link href="/" className="text-primary hover:underline">
           Sign Up

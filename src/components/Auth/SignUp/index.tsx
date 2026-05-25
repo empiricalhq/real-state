@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import SocialSignUp from "../SocialSignUp";
-import Logo from "@/components/Layout/Header/BrandLogo/Logo";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
+
 import AuthDialogContext from "@/app/context/AuthDialogContext";
+import Logo from "@/components/Layout/Header/BrandLogo/Logo";
+
+import SocialSignUp from "../SocialSignUp";
 const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -48,14 +50,14 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
 
   return (
     <>
-      <div className="mb-10 text-center mx-auto inline-block max-w-[160px]">
+      <div className="mx-auto mb-10 inline-block max-w-[160px] text-center">
         <Logo />
       </div>
 
       <SocialSignUp />
 
-      <span className="z-1 relative my-8 block text-center">
-        <span className="-z-1 absolute left-0 top-1/2 block h-px w-full bg-black/10 dark:bg-white/20"></span>
+      <span className="relative z-1 my-8 block text-center">
+        <span className="absolute top-1/2 left-0 -z-1 block h-px w-full bg-black/10 dark:bg-white/20"></span>
         <span className="text-body-secondary relative z-10 inline-block bg-white px-3 text-base dark:bg-black">
           OR
         </span>
@@ -68,7 +70,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
             placeholder="Name"
             name="name"
             required
-            className="w-full rounded-md border border-black/10 dark:border-white/20 border-solid bg-transparent px-5 py-3 text-base text-dark outline-none transition placeholder:text-gray-300 focus:border-primary focus-visible:shadow-none dark:text-white dark:focus:border-primary"
+            className="text-dark focus:border-primary dark:focus:border-primary w-full rounded-md border border-solid border-black/10 bg-transparent px-5 py-3 text-base transition outline-none placeholder:text-gray-300 focus-visible:shadow-none dark:border-white/20 dark:text-white"
           />
         </div>
         <div className="mb-[22px]">
@@ -77,7 +79,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
             placeholder="Email"
             name="email"
             required
-            className="w-full rounded-md border border-black/10 dark:border-white/20 border-solid bg-transparent px-5 py-3 text-base text-dark outline-none transition placeholder:text-gray-300 focus:border-primary focus-visible:shadow-none dark:text-white dark:focus:border-primary"
+            className="text-dark focus:border-primary dark:focus:border-primary w-full rounded-md border border-solid border-black/10 bg-transparent px-5 py-3 text-base transition outline-none placeholder:text-gray-300 focus-visible:shadow-none dark:border-white/20 dark:text-white"
           />
         </div>
         <div className="mb-[22px]">
@@ -86,20 +88,20 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
             placeholder="Password"
             name="password"
             required
-            className="w-full rounded-md border border-black/10 dark:border-white/20 border-solid bg-transparent px-5 py-3 text-base text-dark outline-none transition placeholder:text-gray-300 focus:border-primary focus-visible:shadow-none dark:text-white dark:focus:border-primary"
+            className="text-dark focus:border-primary dark:focus:border-primary w-full rounded-md border border-solid border-black/10 bg-transparent px-5 py-3 text-base transition outline-none placeholder:text-gray-300 focus-visible:shadow-none dark:border-white/20 dark:text-white"
           />
         </div>
         <div className="mb-9">
           <button
             type="submit"
-            className="flex w-full cursor-pointer items-center justify-center rounded-md bg-primary px-5 py-3 text-base text-white transition duration-300 ease-in-out hover:!bg-darkprimary dark:hover:!bg-darkprimary"
+            className="bg-primary hover:!bg-darkprimary dark:hover:!bg-darkprimary flex w-full cursor-pointer items-center justify-center rounded-md px-5 py-3 text-base text-white transition duration-300 ease-in-out"
           >
             Sign Up
           </button>
         </div>
       </form>
 
-      <p className="text-center mb-4 text-base">
+      <p className="mb-4 text-center text-base">
         By creating an account you are agree with our{" "}
         <Link href="/" className="text-primary hover:underline">
           Privacy
@@ -112,10 +114,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
 
       <p className="text-center text-base">
         Already have an account?
-        <Link
-          href="/"
-          className="pl-2 text-primary hover:bg-darkprimary hover:underline"
-        >
+        <Link href="/" className="text-primary hover:bg-darkprimary pl-2 hover:underline">
           Sign In
         </Link>
       </p>

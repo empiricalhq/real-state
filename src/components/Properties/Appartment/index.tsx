@@ -1,20 +1,20 @@
-import PropertyCard from '@/components/Home/Properties/Card/Card'
-import { propertyHomes } from '@/app/api/propertyhomes'
+import { propertyHomes } from "@/app/api/propertyhomes";
+import PropertyCard from "@/components/Home/Properties/Card/Card";
 
 const Appartment: React.FC = () => {
-    return (
-        <section className='pt-0!'>
-            <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
-                <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-                    {propertyHomes.slice(6, 9).map((item, index) => (
-                        <div key={index} className=''>
-                            <PropertyCard item={item} />
-                        </div>
-                    ))}
-                </div>
+  return (
+    <section className="pt-0!">
+      <div className="max-w-8xl container mx-auto px-5 2xl:px-0">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
+          {propertyHomes.slice(6, 9).map((item, index) => (
+            <div key={index} className="">
+              <PropertyCard item={item} />
             </div>
-        </section>
-    )
-}
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default Appartment;

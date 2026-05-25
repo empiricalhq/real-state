@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { createContext, useState, ReactNode, Dispatch, SetStateAction } from "react";
 
@@ -22,12 +22,21 @@ interface AuthDialogProviderProps {
 
 // Create a provider component
 export const AuthDialogProvider: React.FC<AuthDialogProviderProps> = ({ children }) => {
-  const [isSuccessDialogOpen , setIsSuccessDialogOpen] = useState<boolean>(false);
-  const [isFailedDialogOpen , setIsFailedDialogOpen] = useState<boolean>(false);
-  const [isUserRegistered , setIsUserRegistered] = useState<boolean>(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState<boolean>(false);
+  const [isFailedDialogOpen, setIsFailedDialogOpen] = useState<boolean>(false);
+  const [isUserRegistered, setIsUserRegistered] = useState<boolean>(false);
 
   return (
-    <AuthDialogContext.Provider value={{ isSuccessDialogOpen ,isFailedDialogOpen, setIsSuccessDialogOpen, setIsFailedDialogOpen,isUserRegistered,setIsUserRegistered }}>
+    <AuthDialogContext.Provider
+      value={{
+        isSuccessDialogOpen,
+        isFailedDialogOpen,
+        setIsSuccessDialogOpen,
+        setIsFailedDialogOpen,
+        isUserRegistered,
+        setIsUserRegistered,
+      }}
+    >
       {children}
     </AuthDialogContext.Provider>
   );

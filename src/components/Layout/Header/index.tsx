@@ -1,165 +1,172 @@
-'use client'
-import { navLinks } from '@/app/api/navlink'
-import { Icon } from '@iconify/react'
-import Link from 'next/link'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import NavLink from './Navigation/NavLink'
-import { useTheme } from 'next-themes'
-import { usePathname } from 'next/navigation'
-import Image from 'next/image'
+"use client";
+import { Icon } from "@iconify/react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useCallback } from "react";
+
+import { navLinks } from "@/app/api/navlink";
+
+import NavLink from "./Navigation/NavLink";
 
 const Header: React.FC = () => {
-  const [sticky, setSticky] = useState(false)
-  const [navbarOpen, setNavbarOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const pathname = usePathname()
+  const [sticky, setSticky] = useState(false);
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
 
-  const sideMenuRef = useRef<HTMLDivElement>(null)
+  const sideMenuRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (sideMenuRef.current && !sideMenuRef.current.contains(event.target as Node)) {
-      setNavbarOpen(false)
+      setNavbarOpen(false);
     }
-  }
+  };
 
   const handleScroll = useCallback(() => {
-    setSticky(window.scrollY >= 50)
-  }, [])
+    setSticky(window.scrollY >= 50);
+  }, []);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    document.addEventListener('mousedown', handleClickOutside)
+    window.addEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [handleScroll])
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleScroll]);
 
-  const isHomepage = pathname === '/'
+  const isHomepage = pathname === "/";
 
   return (
-    <header className={`fixed h-24 py-1 z-50 w-full bg-transparent transition-all duration-300 lg:px-0 px-4 ${sticky ? "top-3" : "top-0"}`}>
-      <nav className={`container mx-auto max-w-8xl flex items-center justify-between py-4 duration-300 ${sticky ? "shadow-lg bg-white dark:bg-dark rounded-full top-5 px-4 " : "shadow-none top-0"}`}>
-        <div className='flex justify-between items-center gap-2 w-full'>
+    <header
+      className={`fixed z-50 h-24 w-full bg-transparent px-4 py-1 transition-all duration-300 lg:px-0 ${sticky ? "top-3" : "top-0"}`}
+    >
+      <nav
+        className={`max-w-8xl container mx-auto flex items-center justify-between py-4 duration-300 ${sticky ? "dark:bg-dark top-5 rounded-full bg-white px-4 shadow-lg " : "top-0 shadow-none"}`}
+      >
+        <div className="flex w-full items-center justify-between gap-2">
           <div>
-            <Link href='/'>
+            <Link href="/">
               <Image
-                src={'/images/header/dark-logo.svg'}
-                alt='logo'
+                src={"/images/header/dark-logo.svg"}
+                alt="logo"
                 width={150}
                 height={68}
                 unoptimized={true}
-                className={`${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                className={`${isHomepage ? (sticky ? "block dark:hidden" : "hidden") : sticky ? "block dark:hidden" : "block dark:hidden"}`}
               />
               <Image
-                src={'/images/header/logo.svg'}
-                alt='logo'
+                src={"/images/header/logo.svg"}
+                alt="logo"
                 width={150}
                 height={68}
                 unoptimized={true}
-                className={`${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                className={`${isHomepage ? (sticky ? "hidden dark:block" : "block") : sticky ? "hidden dark:block" : "hidden dark:block"}`}
               />
             </Link>
           </div>
-          <div className='flex items-center gap-2 sm:gap-6'>
+          <div className="flex items-center gap-2 sm:gap-6">
             <button
-              className='hover:cursor-pointer'
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="hover:cursor-pointer"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               <Icon
-                icon={'solar:sun-bold'}
+                icon={"solar:sun-bold"}
                 width={32}
                 height={32}
-                className={`dark:hidden block ${isHomepage
-                  ? sticky
-                    ? 'text-dark'
-                    : 'text-white'
-                  : 'text-dark'
-                  }`}
+                className={`block dark:hidden ${
+                  isHomepage ? (sticky ? "text-dark" : "text-white") : "text-dark"
+                }`}
               />
               <Icon
-                icon={'solar:moon-bold'}
+                icon={"solar:moon-bold"}
                 width={32}
                 height={32}
-                className='dark:block hidden text-white'
+                className="hidden text-white dark:block"
               />
             </button>
             <div className={`hidden md:block`}>
-              <Link href='#' className={`text-base text-inherit flex items-center gap-2 border-r pr-6 ${isHomepage
-                ? sticky
-                  ? 'text-dark dark:text-white hover:text-primary border-dark dark:border-white'
-                  : 'text-white hover:text-primary'
-                : 'text-dark hover:text-primary'
+              <Link
+                href="#"
+                className={`flex items-center gap-2 border-r pr-6 text-base text-inherit ${
+                  isHomepage
+                    ? sticky
+                      ? "text-dark hover:text-primary border-dark dark:border-white dark:text-white"
+                      : "hover:text-primary text-white"
+                    : "text-dark hover:text-primary"
                 }`}
               >
-                <Icon icon={'ph:phone-bold'} width={24} height={24} />
+                <Icon icon={"ph:phone-bold"} width={24} height={24} />
                 +1-212-456-789
               </Link>
             </div>
             <div>
               <button
                 onClick={() => setNavbarOpen(!navbarOpen)}
-                className={`flex items-center gap-3 p-2 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border ${isHomepage
-                  ? sticky
-                    ? 'text-white bg-dark dark:bg-white dark:text-dark dark:hover:text-white dark:hover:bg-dark hover:text-dark hover:bg-white border-dark dark:border-white'
-                    : 'text-dark bg-white dark:text-dark hover:bg-transparent hover:text-white border-white'
-                  : 'bg-dark text-white hover:bg-transparent hover:text-dark dark:bg-white dark:text-dark dark:hover:bg-transparent dark:hover:text-white duration-300'
-                  }`}
-                aria-label='Toggle mobile menu'>
+                className={`flex items-center gap-3 rounded-full border p-2 font-semibold hover:cursor-pointer sm:px-5 sm:py-3 ${
+                  isHomepage
+                    ? sticky
+                      ? "bg-dark dark:text-dark dark:hover:bg-dark hover:text-dark border-dark text-white hover:bg-white dark:border-white dark:bg-white dark:hover:text-white"
+                      : "text-dark dark:text-dark border-white bg-white hover:bg-transparent hover:text-white"
+                    : "bg-dark hover:text-dark dark:text-dark text-white duration-300 hover:bg-transparent dark:bg-white dark:hover:bg-transparent dark:hover:text-white"
+                }`}
+                aria-label="Toggle mobile menu"
+              >
                 <span>
-                  <Icon icon={'ph:list'} width={24} height={24} />
+                  <Icon icon={"ph:list"} width={24} height={24} />
                 </span>
-                <span className='hidden sm:block'>Menu</span>
+                <span className="hidden sm:block">Menu</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {
-        navbarOpen && (
-          <div className='fixed top-0 left-0 w-full h-full bg-black/50 z-40' />
-        )
-      }
+      {navbarOpen && <div className="fixed top-0 left-0 z-40 h-full w-full bg-black/50" />}
 
       <div
         ref={sideMenuRef}
-        className={`fixed top-0 right-0 h-full w-full bg-dark shadow-lg transition-transform duration-300 max-w-2xl ${navbarOpen ? 'translate-x-0' : 'translate-x-full'} z-50 px-20 overflow-auto no-scrollbar`}
+        className={`bg-dark fixed top-0 right-0 h-full w-full max-w-2xl shadow-lg transition-transform duration-300 ${navbarOpen ? "translate-x-0" : "translate-x-full"} no-scrollbar z-50 overflow-auto px-20`}
       >
-        <div className="flex flex-col h-full justify-between">
+        <div className="flex h-full flex-col justify-between">
           <div className="">
-            <div className='flex items-center justify-start py-10'>
+            <div className="flex items-center justify-start py-10">
               <button
                 onClick={() => setNavbarOpen(false)}
-                aria-label='Close mobile menu'
-                className='bg-white p-3 rounded-full hover:cursor-pointer'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'>
+                aria-label="Close mobile menu"
+                className="rounded-full bg-white p-3 hover:cursor-pointer"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path
-                    fill='none'
-                    stroke='black'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M6 18L18 6M6 6l12 12'
+                    fill="none"
+                    stroke="black"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
             </div>
-            <nav className='flex flex-col items-start gap-4'>
-              <ul className='w-full'>
+            <nav className="flex flex-col items-start gap-4">
+              <ul className="w-full">
                 {navLinks.map((item, index) => (
                   <NavLink key={index} item={item} onClick={() => setNavbarOpen(false)} />
                 ))}
-                <li className='flex items-center gap-4'>
-                  <Link href="/signin" className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
+                <li className="flex items-center gap-4">
+                  <Link
+                    href="/signin"
+                    className="bg-primary border-primary hover:text-primary mt-3 block w-fit rounded-full border px-8 py-4 text-base leading-4 font-semibold text-white duration-300 hover:bg-transparent"
+                  >
                     Sign In
                   </Link>
-                  <Link href="/" className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
+                  <Link
+                    href="/"
+                    className="border-primary text-primary hover:bg-primary mt-3 block w-fit rounded-full border bg-transparent px-8 py-4 text-base leading-4 font-semibold duration-300 hover:text-white"
+                  >
                     Sign up
                   </Link>
                 </li>
@@ -167,21 +174,25 @@ const Header: React.FC = () => {
             </nav>
           </div>
 
-          <div className='flex flex-col gap-1 my-16 text-white'>
-            <p className='text-base sm:text-xm font-normal text-white/40'>
-              Contact
-            </p>
-            <Link href="#" className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
+          <div className="my-16 flex flex-col gap-1 text-white">
+            <p className="sm:text-xm text-base font-normal text-white/40">Contact</p>
+            <Link
+              href="#"
+              className="sm:text-xm hover:text-primary text-base font-medium text-inherit"
+            >
               hello@homely.com
             </Link>
-            <Link href="#" className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-              +1-212-456-7890{' '}
+            <Link
+              href="#"
+              className="sm:text-xm hover:text-primary text-base font-medium text-inherit"
+            >
+              +1-212-456-7890{" "}
             </Link>
           </div>
         </div>
       </div>
-    </header >
-  )
-}
+    </header>
+  );
+};
 
-export default Header
+export default Header;
