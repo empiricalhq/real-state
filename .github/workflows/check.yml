@@ -1,0 +1,35 @@
+name: Check
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # setup-bun cannot read mise.toml, so read the pinned version here.
+      - name: Read the Bun version from mise.toml
+        id: bun
+        run: echo "version=$(sed -nE 's/^bun *= *"([^"]+)".*/\1/p' mise.toml)" >> "$GITHUB_OUTPUT"
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ steps.bun.outputs.version }}
+
+      - run: bun install --frozen-lockfile
+
+      - run: bunx tsc --noEmit
+
+      - run: bun run lint
+
+      - run: bun run fmt:check
+
+      # Tests run against in-process Postgres (PGlite) and need no secrets.
+      - run: bun test
