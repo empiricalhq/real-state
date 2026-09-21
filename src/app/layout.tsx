@@ -9,7 +9,6 @@ import NextTopLoader from "nextjs-toploader";
 
 import Footer from "@/components/Layout/Footer";
 import Header from "@/components/Layout/Header";
-import SessionProviderComp from "@/components/nextauth/SessionProvider";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"] });
 
@@ -32,13 +31,11 @@ export default function RootLayout({
     >
       <body className={`${font.className} bg-white antialiased dark:bg-black`}>
         <NextTopLoader color="#07be8a" />
-        <SessionProviderComp>
-          <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
-            <Header />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        </SessionProviderComp>
+        <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
