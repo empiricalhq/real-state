@@ -3,10 +3,12 @@ import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 import { navLinks } from "@/app/api/navlink";
+import { authClient } from "@/lib/auth-client";
+import { isRole } from "@/lib/roles";
 
 import NavLink from "./Navigation/NavLink";
 
@@ -15,6 +17,17 @@ const Header: React.FC = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
+  // Only decides which links to show. Access is enforced on the server.
+  const { data: session } = authClient.useSession();
+  const isStaff = isRole(session?.user.role);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    setNavbarOpen(false);
+    router.push("/");
+    router.refresh();
+  };
 
   const sideMenuRef = useRef<HTMLDivElement>(null);
 
@@ -159,18 +172,32 @@ const Header: React.FC = () => {
                   <NavLink key={index} item={item} onClick={() => setNavbarOpen(false)} />
                 ))}
                 <li className="flex items-center gap-4">
-                  <Link
-                    href="/signin"
-                    className="bg-primary border-primary hover:text-primary mt-3 block w-fit rounded-full border px-8 py-4 text-base leading-4 font-semibold text-white duration-300 hover:bg-transparent"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/"
-                    className="border-primary text-primary hover:bg-primary mt-3 block w-fit rounded-full border bg-transparent px-8 py-4 text-base leading-4 font-semibold duration-300 hover:text-white"
-                  >
-                    Sign up
-                  </Link>
+                  {isStaff ? (
+                    <>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setNavbarOpen(false)}
+                        className="bg-primary border-primary hover:text-primary mt-3 block w-fit rounded-full border px-8 py-4 text-base leading-4 font-semibold text-white duration-300 hover:bg-transparent"
+                      >
+                        Dashboard
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleSignOut}
+                        className="border-primary text-primary hover:bg-primary mt-3 block w-fit cursor-pointer rounded-full border bg-transparent px-8 py-4 text-base leading-4 font-semibold duration-300 hover:text-white"
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/signin"
+                      onClick={() => setNavbarOpen(false)}
+                      className="bg-primary border-primary hover:text-primary mt-3 block w-fit rounded-full border px-8 py-4 text-base leading-4 font-semibold text-white duration-300 hover:bg-transparent"
+                    >
+                      Sign In
+                    </Link>
+                  )}
                 </li>
               </ul>
             </nav>
