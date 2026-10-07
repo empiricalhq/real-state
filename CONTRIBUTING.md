@@ -1,61 +1,43 @@
 # Contributing
 
-Contributors should read [Architecture](architecture.md) before changing a
-route, auth boundary, or database table. Authentication behavior is tested
-against the real Better Auth instance and an in-process Postgres. Keep those
-tests real when the behavior can run without a mock.
+Read [Architecture](architecture.md) before changing a route, authentication
+boundary, or database table. Use the [manual](docs/readme.md) for configuration
+and deployment.
 
-## Set up
+## Setup
 
-Use Bun 1.4.2, as pinned in [`mise.toml`](mise.toml), and follow the
-[configuration](docs/configuration.md) and
-[first-admin](docs/auth.md#the-first-admin) guides when a database or staff
-account is needed.
+Use Bun 1.4.2, as pinned in [`mise.toml`](mise.toml), and install the locked
+dependencies:
 
 ```bash
-bun install
+bun install --frozen-lockfile
 ```
 
 ## Checks
 
-Run the same checks used by CI:
+Run these checks before handing off a change:
 
 ```bash
 bun run typecheck
 bun run lint
 bun run fmt:check
 bun test
+bun run build
 ```
 
-Format changed files with:
+Format the repository with:
 
 ```bash
 bun run fmt
 ```
 
-For a production build, run:
+Database commands are:
 
 ```bash
-bun run build
-```
-
-The tests use the committed migrations and an in-process PGlite database. They
-do not use `DATABASE_URL`, network access, or real secrets.
-
-## Commands
-
-The package scripts are:
-
-```bash
-bun dev
-bun run build
-bun start
-bun run lint
-bun run fmt
-bun run fmt:check
-bun run typecheck
-bun test
 bun run db:generate
 bun run db:migrate
 bun run db:seed
 ```
+
+The tests use the committed migrations and an in-process PGlite database. They
+do not use `DATABASE_URL`, network access, or real secrets.

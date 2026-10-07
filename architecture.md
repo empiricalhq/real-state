@@ -1,16 +1,16 @@
 # Architecture
 
-The Store is a Next.js 16 App Router site for public property and blog pages and
-a protected staff dashboard. This page owns the code map and the boundary
-between source data, authentication, and the database.
+Homely is a Next.js App Router application. Public routes render property and
+blog content. Staff routes read authentication state before rendering or
+changing staff data.
 
-## Request paths
+## Routes
 
-Public pages do not require an account:
+Public routes do not require an account.
 
-| URL                          | Implementation                              | Data source                              |
+| Route                        | Implementation                              | Content owner                            |
 | ---------------------------- | ------------------------------------------- | ---------------------------------------- |
-| `/`                          | `src/app/page.tsx`                          | Home components and static modules       |
+| `/`                          | `src/app/page.tsx`                          | Home components and static data modules  |
 | `/properties`                | `src/app/(site)/properties/page.tsx`        | `src/components/Properties/PropertyList` |
 | `/properties/[slug]`         | `src/app/(site)/properties/[slug]/page.tsx` | `src/app/api/propertyhomes.tsx`          |
 | `/residential-homes`         | `src/app/(site)/residential-homes/page.tsx` | `src/components/Properties/Residential`  |
@@ -19,13 +19,13 @@ Public pages do not require an account:
 | `/appartment`                | `src/app/(site)/appartment/page.tsx`        | `src/components/Properties/Appartment`   |
 | `/blogs` and `/blogs/[slug]` | `src/app/(site)/blogs`                      | `markdown/blogs`                         |
 
-The `src/app/api/*.tsx` property, navigation, footer, featured-property, and
-testimonial files are imported data modules. They are not HTTP API route
-handlers and they do not read Postgres.
+The property, navigation, footer, featured-property, and testimonial files in
+`src/app/api/` are imported TypeScript data modules. They are not HTTP route
+handlers and do not read PostgreSQL.
 
-Protected pages and actions are:
+Protected routes and operations require the data-access layer or Better Auth.
 
-| URL or operation   | Implementation                                                       | Check                                         |
+| Route or operation | Implementation                                                       | Access check                                  |
 | ------------------ | -------------------------------------------------------------------- | --------------------------------------------- |
 | `/dashboard`       | `src/app/dashboard/page.tsx` and `layout.tsx`                        | `requireStaff()`                              |
 | `/dashboard/staff` | `src/app/dashboard/staff/page.tsx`                                   | `requireAdmin()`                              |
@@ -33,55 +33,42 @@ Protected pages and actions are:
 | `/change-password` | `src/app/change-password/page.tsx`                                   | `requireStaff({ allowPasswordChange: true })` |
 | `/api/auth/*`      | `src/app/api/auth/[...all]/route.ts`                                 | Better Auth                                   |
 
-`src/proxy.ts` matches `/dashboard/:path*`. It redirects requests without a
-session cookie to `/signin`, but it does not validate the cookie. Pages and
-server actions must perform their own data-access check.
-
 ## Authentication boundary
 
-`src/lib/auth.ts` creates Better Auth with the Drizzle adapter and the admin
-plugin. `src/lib/dal.ts` reads the session through Better Auth and turns the
-pure decisions in `src/lib/access.ts` into redirects. `requireStaff()` accepts
-admins and agents. `requireAdmin()` accepts only admins. The Better Auth admin
-endpoints check the role again.
+`src/proxy.ts` redirects requests without a session cookie from
+`/dashboard/:path*` to `/signin`. It does not validate the cookie. Pages and
+server actions read the session through `src/lib/dal.ts`, which applies the
+decisions in `src/lib/access.ts`. Better Auth checks its admin endpoints again.
 
-The sign-in flow is:
+The sign-in request follows this path:
 
 ```text
-/signin -> Better Auth client -> /api/auth/sign-in/email -> session in Postgres
+/signin -> Better Auth client -> /api/auth/sign-in/email -> session in PostgreSQL
 ```
 
-No page or server action may rely on the proxy as its authorization check.
-Details of cookies, rate limits, roles, staff actions, and temporary passwords
-belong to [Authentication](docs/auth.md).
+The [authentication manual](docs/auth.md) owns roles, sessions, staff
+operations, and password rules.
 
-## Database ownership
+## Data ownership
 
-`src/db/index.ts` creates a node-postgres pool from `DATABASE_URL` and passes it
-to Drizzle. The pool allows five connections and opens them on first query.
-`src/db/schema.ts` owns these tables:
+`src/db/index.ts` creates the PostgreSQL pool and passes it to Drizzle.
+`src/db/schema.ts` owns the Better Auth tables: `user`, `session`, `account`,
+`verification`, and `rate_limit`. The committed SQL in `drizzle/` is applied by
+`scripts/migrate.ts`.
 
-- Better Auth identity and session data: `user`, `session`, `account`, and
-  `verification`.
-- Better Auth database rate limits: `rate_limit`.
-
-The committed SQL in `drizzle/` is the database schema applied by
-`scripts/migrate.ts`. `scripts/seed-admin.ts` creates the first admin through
-Better Auth's internal adapter. The app does not apply schema changes itself.
-
-Property, navigation, featured-property, testimonial, and blog content is stored
-in TypeScript modules and Markdown under `src/app/api/` and `markdown/blogs/`.
-It is outside the database boundary.
+The application stores property, navigation, featured-property, testimonial, and
+blog content in TypeScript modules and Markdown under `src/app/api/` and
+`markdown/blogs/`. This content is outside the database boundary.
 
 ## Module map
 
-| Area                                     | Owns                                                               |
-| ---------------------------------------- | ------------------------------------------------------------------ |
-| `src/app`                                | Next.js routes, layouts, pages, server actions, and the auth route |
-| `src/components`                         | Rendered page and UI components                                    |
-| `src/lib/auth.ts`                        | Better Auth configuration and hooks                                |
-| `src/lib/access.ts` and `src/lib/dal.ts` | Authorization decisions and request redirects                      |
-| `src/lib/staff-commands.ts`              | Validated staff operations called by server actions                |
-| `src/db`                                 | Drizzle database connection and schema                             |
-| `scripts`                                | Explicit migration and first-admin commands                        |
-| `test`                                   | Real auth, access, action, seed, and environment checks            |
+| Area                                     | Responsibility                                              |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| `src/app`                                | Routes, layouts, pages, server actions, and the auth route  |
+| `src/components`                         | Rendered page and UI components                             |
+| `src/lib/auth.ts`                        | Better Auth configuration and hooks                         |
+| `src/lib/access.ts` and `src/lib/dal.ts` | Access decisions, session reads, and redirects              |
+| `src/lib/staff-commands.ts`              | Validated staff operations called by server actions         |
+| `src/db`                                 | Drizzle connection and database schema                      |
+| `scripts`                                | Explicit migration and first-admin commands                 |
+| `test`                                   | Authentication, access, action, seed, and environment tests |

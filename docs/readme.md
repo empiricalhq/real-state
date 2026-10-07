@@ -1,13 +1,13 @@
-# Documentation
+# Manual
 
-This index owns the manual’s order. Each document has one subject and links back
-here when a reader needs the next step.
+Use the manual in this order.
 
-| Document                          | Owns                                                          |
-| --------------------------------- | ------------------------------------------------------------- |
-| [Configuration](configuration.md) | Environment variables, local values, and configuration guards |
-| [Deployment](deployment.md)       | Vercel setup, migrations, and production start checks         |
-| [Authentication](auth.md)         | Sign-in, roles, staff actions, sessions, and auth tests       |
+1. [Configuration](configuration.md) sets local and production environment
+   values.
+2. [Deployment](deployment.md) builds, migrates, and starts the production
+   server.
+3. [Authentication](auth.md) explains sign-in, staff access, and the first
+   admin.
 
-The [architecture page](../architecture.md) owns the route, module, and database
-map. [Contributing](../CONTRIBUTING.md) owns contributor setup and local checks.
+The [architecture page](../architecture.md) owns the route, module, and data
+map. [Contributing](../CONTRIBUTING.md) owns the checks for changes.

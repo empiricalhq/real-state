@@ -1,43 +1,44 @@
 # Configuration
 
-This page owns environment variables and the checks that reject an unsafe
-production configuration.
+The application and its database commands use the following environment
+variables.
+
+## Local setup
+
+Copy the example file before starting the development server:
+
+```bash
+cp .env.example .env.local
+```
+
+The local file is ignored by Git. The public site can start with the example
+values, but sign-in, migrations, and first-admin setup require a reachable
+PostgreSQL database.
+
+Remove `SEED_ADMIN_PASSWORD` from the environment after the first admin is
+created.
 
 ## Environment variables
 
-Copy `.env.example` to `.env.local`. Files matching `.env*` are ignored by Git,
-except for `.env.example`.
+| Variable                      | Used by                           | Value                                                                                  |
+| ----------------------------- | --------------------------------- | -------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                | Application and database commands | PostgreSQL connection string. Use `sslmode=verify-full` with Neon.                     |
+| `BETTER_AUTH_SECRET`          | Application                       | Secret used by Better Auth in production. Generate one with `openssl rand -base64 32`. |
+| `BETTER_AUTH_URL`             | Application                       | Public site URL, such as `http://localhost:3000` locally.                              |
+| `SEED_ADMIN_EMAIL`            | `db:seed`                         | Email for the first admin.                                                             |
+| `SEED_ADMIN_PASSWORD`         | `db:seed`                         | Password with 12 to 128 characters.                                                    |
+| `SEED_ADMIN_NAME`             | `db:seed`                         | Optional display name. Defaults to `Admin`.                                            |
+| `SITE_NAME` and `AUTHOR_NAME` | Blog metadata                     | Values shown in blog metadata.                                                         |
 
-| Variable                   | Needed by                        | Notes                                                                               |
-| -------------------------- | -------------------------------- | ----------------------------------------------------------------------------------- |
-| `DATABASE_URL`             | the app, `db:migrate`, `db:seed` | PostgreSQL connection string. Use `sslmode=verify-full` with Neon.                  |
-| `BETTER_AUTH_SECRET`       | the app                          | Required in production. Generate it with `openssl rand -base64 32`.                 |
-| `BETTER_AUTH_URL`          | the app                          | Public site URL: `http://localhost:3000` locally and the real domain in production. |
-| `SEED_ADMIN_EMAIL`         | `db:seed` only                   | Email of the first admin.                                                           |
-| `SEED_ADMIN_PASSWORD`      | `db:seed` only                   | 12 to 128 characters. Remove it from the environment after seeding.                 |
-| `SEED_ADMIN_NAME`          | `db:seed` only                   | Optional. Defaults to `Admin`.                                                      |
-| `SITE_NAME`, `AUTHOR_NAME` | blog pages                       | Metadata.                                                                           |
+The required Bun version is pinned in [`mise.toml`](../mise.toml).
 
-The Bun version is `1.4.2`, pinned in [`mise.toml`](../mise.toml).
+## Production checks
 
-## Production guards
+The server requires `BETTER_AUTH_SECRET` and `DATABASE_URL` when
+`NODE_ENV=production`. `src/instrumentation-node.ts` checks them at startup and
+exits when either is missing.
 
-`BETTER_AUTH_SECRET` and `DATABASE_URL` are required in production. The app has
-no fallback production secret.
-
-- At start-up, `src/instrumentation.ts` calls the check in
-  `src/instrumentation-node.ts`. A production server exits if either variable is
-  missing. This includes production preview starts.
-- During a Vercel production build, `next.config.ts` calls
-  `assertVercelBuildEnv()` from `src/lib/env.ts`. A missing variable fails the
-  build, so a broken deployment does not replace the previous one.
-
-Preview and local builds are not checked at build time. A preview still needs
-the variables at start-up. `BETTER_AUTH_URL` is not checked. Set it to the
-public site URL.
-
-`next build` imports the auth code while collecting page data. During the build
-phase only, `readAuthSecret()` uses a random value generated per process. It is
-not stored in the source, and the build process does not serve requests. The
-database pool opens on first use, so a local production build does not need a
-database connection.
+A Vercel production build checks the same variables in `next.config.ts`. Local
+and preview builds do not require them at build time, but a production server
+does require them at startup. `BETTER_AUTH_URL` is not validated by the startup
+check, so set it to the URL that users will visit.

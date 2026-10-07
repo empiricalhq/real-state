@@ -1,42 +1,46 @@
 # Deployment
 
-This page owns the deployment sequence. The application runs as a Next.js
-production server with a PostgreSQL database.
+Homely runs as a Next.js production server with PostgreSQL as its database.
 
 ## Vercel
 
-Before the first deploy, set `DATABASE_URL`, `BETTER_AUTH_SECRET`, and
-`BETTER_AUTH_URL` for the Vercel Production environment. Set the first two for
-Preview as well, and set `BETTER_AUTH_URL` to the preview URL when the preview
-needs auth redirects.
+Set `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` in the Vercel
+project. Set the first two for Preview when the preview serves signed-in pages.
+Use the preview URL for `BETTER_AUTH_URL` when the preview needs auth redirects.
+See [Configuration](configuration.md) for the environment contract.
 
-A production build without `DATABASE_URL` or `BETTER_AUTH_SECRET` fails on
-purpose. Preview and local builds are not checked at build time, but a preview
-without those variables exits at start-up. See
-[Configuration](configuration.md#production-guards) for the checks.
+## Release
 
-## Release sequence
-
-Install dependencies and verify the production build locally:
+Install the locked dependencies and verify the production build:
 
 ```bash
-bun install
+bun install --frozen-lockfile
 bun run build
 ```
 
-Apply committed migrations against the configured database before serving the
-new application:
+Apply the committed migrations to the configured database before starting the
+new server:
 
 ```bash
 bun run db:migrate
-```
-
-Start the production server with:
-
-```bash
 bun run start
 ```
 
-The app never applies schema changes on its own. Edit `src/db/schema.ts`, run
-`bun run db:generate`, and review and commit the SQL written under `drizzle/`
-before running `bun run db:migrate`.
+The application does not apply schema changes at startup. When the schema
+changes, edit `src/db/schema.ts`, generate and review the migration, then apply
+it:
+
+```bash
+bun run db:generate
+bun run db:migrate
+```
+
+When adding a Better Auth plugin or field, regenerate the schema with:
+
+```bash
+bunx auth@latest generate --config src/lib/auth.ts --output src/db/schema.ts --yes
+```
+
+If the deployment runs behind a proxy other than Vercel, configure that proxy to
+overwrite `X-Forwarded-For`. Rate limiting uses that address, so clients must
+not be able to choose it.
