@@ -1,37 +1,10 @@
 import React from "react";
 
 import BlogCard from "@/components/shared/Blog/blogCard";
-import { getAllPosts } from "@/components/utils/markdown";
-
-interface Blog {
-  title: string;
-  date: string;
-  excerpt: string;
-  coverImage: string;
-  slug: string;
-  detail: string;
-  tag: string;
-}
+import { getBlogs } from "@/components/utils/markdown";
 
 const BlogList: React.FC = () => {
-  // Get all posts and map over them to ensure each field is a string
-  const posts: Blog[] = getAllPosts([
-    "title",
-    "date",
-    "excerpt",
-    "coverImage",
-    "slug",
-    "detail",
-    "tag",
-  ]).map((item) => ({
-    title: typeof item.title === "string" ? item.title : String(item.title),
-    date: typeof item.date === "string" ? item.date : String(item.date),
-    excerpt: typeof item.excerpt === "string" ? item.excerpt : String(item.excerpt),
-    coverImage: typeof item.coverImage === "string" ? item.coverImage : String(item.coverImage),
-    slug: typeof item.slug === "string" ? item.slug : String(item.slug),
-    detail: typeof item.detail === "string" ? item.detail : String(item.detail),
-    tag: typeof item.tag === "string" ? item.tag : String(item.tag),
-  }));
+  const posts = getBlogs();
 
   return (
     <section className="pt-0!">
