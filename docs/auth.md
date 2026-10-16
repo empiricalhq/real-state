@@ -39,7 +39,9 @@ There are two roles:
 
 The staff page can add an account, change its role, ban or unban it, revoke its
 sessions, and reset its password. These operations are handled by
-`src/lib/staff-commands.ts`.
+`src/lib/staff-commands.ts`. The page lists 50 accounts per page, oldest first.
+The `page` search parameter selects the page, and a page past the last shows a
+link back to page 1.
 
 When adding a protected page or server action, call `requireStaff()` or
 `requireAdmin()` in that page or action. The proxy only provides an early
