@@ -5,14 +5,12 @@ const MAX_PAGE = 1_000_000;
 
 export type SearchParams = Record<string, string | string[] | undefined>;
 
-// Treat a missing, malformed, or non-positive page as page 1.
 export function parsePage(value: string | string[] | undefined) {
   const text = Array.isArray(value) ? value[0] : value;
   if (!text || !/^\d+$/.test(text)) return 1;
   return Math.min(Math.max(Number(text), 1), MAX_PAGE);
 }
 
-// Preserve other search parameters when changing pages.
 export function pageHref(params: SearchParams, page: number) {
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {

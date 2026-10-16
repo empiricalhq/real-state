@@ -9,11 +9,6 @@ import {
   parseUserId,
 } from "@/lib/validation";
 
-// What an admin can do to staff. These run after the server action has called
-// requireAdmin(), and Better Auth checks the caller's role again from the
-// request headers. They take the auth instance and the headers, so they run
-// without Next and are tested against real sessions.
-
 export type CommandResult = { ok: true } | { ok: false; error: string };
 export type Caller = { headers: Headers; userId: string };
 
@@ -38,7 +33,6 @@ export async function createStaff(
   const parsed = parseCreateStaff(input);
   if (!parsed.ok) return parsed;
 
-  // The temporary password is flagged for change by a hook in src/lib/auth.ts.
   return run(() => auth.api.createUser({ headers: caller.headers, body: parsed.value }));
 }
 
@@ -107,8 +101,6 @@ export async function resetStaffPassword(
     return { ok: false, error: "Change your own password from the change password page." };
   }
 
-  // A hook in src/lib/auth.ts flags the account for a password change and
-  // revokes the user's sessions.
   return run(() =>
     auth.api.setUserPassword({
       headers: caller.headers,

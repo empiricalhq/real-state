@@ -15,10 +15,8 @@ import {
   type CommandResult,
 } from "@/lib/staff-commands";
 
-// Every action calls requireAdmin() first, before it reads its input. They are
-// Server Functions, which anyone can POST to directly, so the page hiding a
-// button is not a check. Keep requireAdmin() as the first statement: a test
-// (test/guards.test.ts) fails if an action does not start with it.
+// Server Functions can be POSTed to directly, so each action calls
+// requireAdmin() before it reads its input.
 
 export type ActionResult = CommandResult;
 

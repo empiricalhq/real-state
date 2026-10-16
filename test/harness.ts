@@ -4,10 +4,6 @@ import { applyMigrations, client, database } from "./setup";
 
 export { applyMigrations, auth, client, createAuth, database };
 
-// Real Better Auth on an in-process Postgres with the shipped migrations. `auth`
-// is the app's own singleton, routed to PGlite by test/setup.ts. Next's
-// request-scoped modules are stubbed only in test/actions.test.ts.
-
 export const PASSWORD = "correct-horse-battery";
 
 let counter = 0;

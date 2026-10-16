@@ -1,10 +1,6 @@
 import type { Auth } from "@/lib/auth";
 import { isRole } from "@/lib/roles";
 
-// Pure access decisions. They take a session and return where to send the
-// caller, so they run without Next and are tested against real sessions.
-// src/lib/dal.ts turns a refusal into a redirect.
-
 export type Session = NonNullable<Awaited<ReturnType<Auth["api"]["getSession"]>>>;
 export type Access = { ok: true; session: Session } | { ok: false; redirect: string };
 

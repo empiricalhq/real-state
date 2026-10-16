@@ -26,7 +26,6 @@ export default function ContactUs() {
           </p>
         </div>
       </div>
-      {/* form */}
       <div className="rounded-2xl border border-black/10 p-4 shadow-xl dark:border-white/10 dark:shadow-white/10">
         <div className="flex flex-col gap-12 lg:flex-row lg:items-center">
           <div className="relative w-fit">
