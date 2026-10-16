@@ -5,11 +5,15 @@ import React, { FC } from "react";
 
 import { Blog } from "@/types/blog";
 
+export function getBlogHref(slug: string | undefined) {
+  return `/blogs/${encodeURIComponent(slug ?? "")}`;
+}
+
 const BlogCard: FC<{ blog: Blog }> = ({ blog }) => {
   const { title, coverImage, date, slug, tag } = blog;
   return (
     <Link
-      href={`/blogs/${slug}`}
+      href={getBlogHref(slug)}
       aria-label="blog cover 5xl:h-full 5xl:inline-block"
       className="group gap-4"
     >
