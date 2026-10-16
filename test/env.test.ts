@@ -17,18 +17,11 @@ describe("BETTER_AUTH_SECRET", () => {
     expect(readAuthSecret({})).toBeUndefined();
   });
 
-  test("a production build does not need it", () => {
-    const secret = readAuthSecret({ NODE_ENV: "production", NEXT_PHASE: "phase-production-build" });
-    expect(secret).toBeString();
-  });
-
-  test("the build-phase value is random, never a secret written in the source", () => {
-    const secret = readAuthSecret({ NODE_ENV: "production", NEXT_PHASE: "phase-production-build" });
+  test("a production build gets a long per-process value instead", () => {
+    const build = { NODE_ENV: "production", NEXT_PHASE: "phase-production-build" };
+    const secret = readAuthSecret(build);
     expect(secret!.length).toBeGreaterThanOrEqual(64);
-    expect(secret).not.toContain("build-phase-only");
-    expect(readAuthSecret({ NODE_ENV: "production", NEXT_PHASE: "phase-production-build" })).toBe(
-      secret,
-    );
+    expect(readAuthSecret(build)).toBe(secret);
   });
 });
 

@@ -29,18 +29,14 @@ async function getSession(cookie: string) {
 }
 
 describe("sign-up", () => {
-  test("public email sign-up is rejected", async () => {
+  test("public email sign-up is rejected and creates no account", async () => {
+    const email = uniqueEmail("visitor");
     const response = await post("/sign-up/email", {
       name: "Visitor",
-      email: uniqueEmail("visitor"),
+      email,
       password: "a-long-enough-password",
     });
     expect(response.status).toBe(400);
-  });
-
-  test("no account is created by the attempt", async () => {
-    const email = uniqueEmail("visitor");
-    await post("/sign-up/email", { name: "Visitor", email, password: "a-long-enough-password" });
     const context = await auth.$context;
     expect(await context.internalAdapter.findUserByEmail(email)).toBeNull();
   });

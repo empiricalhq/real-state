@@ -76,20 +76,18 @@ async function expectUntouched(victim: { id: string; email: string }, newEmail: 
 describe("staff commands are refused by Better Auth when the caller is not an admin", () => {
   // The server actions call requireAdmin() before any of this. These tests show
   // the second check holds on its own, for every command.
-  test("with no session", async () => {
+  test.each([
+    ["no session", async () => ({ headers: headersFor(null), userId: "nobody" })],
+    [
+      "an agent session",
+      async () => {
+        const agent = await signedInAs("agent");
+        return { headers: agent.headers, userId: agent.id };
+      },
+    ],
+  ])("with %s", async (_label, makeCaller) => {
+    const caller = await makeCaller();
     const { victim, newEmail } = await setup();
-    const caller = { headers: headersFor(null), userId: "nobody" };
-
-    for (const [name, run] of Object.entries(commands(caller, victim, newEmail))) {
-      expect({ name, ...(await run()) }).toMatchObject({ name, ok: false });
-    }
-    await expectUntouched(victim, newEmail);
-  });
-
-  test("with an agent session", async () => {
-    const agent = await signedInAs("agent");
-    const { victim, newEmail } = await setup();
-    const caller = { headers: agent.headers, userId: agent.id };
 
     for (const [name, run] of Object.entries(commands(caller, victim, newEmail))) {
       expect({ name, ...(await run()) }).toMatchObject({ name, ok: false });
