@@ -8,6 +8,16 @@ import { adminAc, defaultAc } from "better-auth/plugins/admin/access";
 import { db } from "@/db";
 import { readAuthSecret } from "@/lib/env";
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "@/lib/roles";
+import { isRecord } from "@/lib/validation";
+
+const bodyOf = (body: unknown): Record<string, unknown> =>
+  isRecord(body) ? body : {};
+
+const userIdOf = (returned: unknown): string | undefined => {
+  if (!isRecord(returned) || !isRecord(returned.user)) return undefined;
+  const { id } = returned.user;
+  return typeof id === "string" ? id : undefined;
+};
 
 // An agent has no staff-administration permissions. The dashboard and its own
 // listings are gated by the data access layer, not by this role definition.
@@ -27,8 +37,12 @@ export type CreateAuthOptions = {
   production?: boolean;
 };
 
-export const createAuth = (database: Database, options: CreateAuthOptions = {}) => {
-  const production = options.production ?? process.env.NODE_ENV === "production";
+export const createAuth = (
+  database: Database,
+  options: CreateAuthOptions = {},
+) => {
+  const production =
+    options.production ?? process.env.NODE_ENV === "production";
 
   return betterAuth({
     database: drizzleAdapter(database, { provider: "pg" }),
@@ -75,9 +89,10 @@ export const createAuth = (database: Database, options: CreateAuthOptions = {}) 
       before: createAuthMiddleware(async (ctx) => {
         // The admin plugin does not check the length of a new user's password,
         // so this runs for the server actions and for direct HTTP calls.
-        if (ctx.path !== "/admin/create-user") return;
+        if (ctx.path !== "/admin/create-user") return undefined;
 
-        const body = (ctx.body ?? {}) as { password?: unknown; data?: Record<string, unknown> };
+        const body = bodyOf(ctx.body);
+        const data = isRecord(body.data) ? body.data : {};
         const password = typeof body.password === "string" ? body.password : "";
         if (password.length < MIN_PASSWORD_LENGTH) {
           throw new APIError("BAD_REQUEST", {
@@ -85,13 +100,15 @@ export const createAuth = (database: Database, options: CreateAuthOptions = {}) 
           });
         }
         if (password.length > MAX_PASSWORD_LENGTH) {
-          throw new APIError("BAD_REQUEST", { message: "Password is too long." });
+          throw new APIError("BAD_REQUEST", {
+            message: "Password is too long.",
+          });
         }
 
         return {
           context: {
             ...ctx,
-            body: { ...body, data: { ...body.data, mustChangePassword: true } },
+            body: { ...body, data: { ...data, mustChangePassword: true } },
           },
         };
       }),
@@ -100,16 +117,20 @@ export const createAuth = (database: Database, options: CreateAuthOptions = {}) 
         if (returned instanceof APIError || returned instanceof Error) return;
 
         if (ctx.path === "/change-password") {
-          const userId = (returned as { user?: { id?: string } } | undefined)?.user?.id;
+          const userId = userIdOf(returned);
           if (userId) {
-            await ctx.context.internalAdapter.updateUser(userId, { mustChangePassword: false });
+            await ctx.context.internalAdapter.updateUser(userId, {
+              mustChangePassword: false,
+            });
           }
         }
 
         if (ctx.path === "/admin/set-user-password") {
-          const userId = (ctx.body as { userId?: string }).userId;
-          if (userId) {
-            await ctx.context.internalAdapter.updateUser(userId, { mustChangePassword: true });
+          const { userId } = bodyOf(ctx.body);
+          if (typeof userId === "string" && userId) {
+            await ctx.context.internalAdapter.updateUser(userId, {
+              mustChangePassword: true,
+            });
             await ctx.context.internalAdapter.deleteUserSessions(userId);
           }
         }

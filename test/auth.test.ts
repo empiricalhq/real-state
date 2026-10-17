@@ -4,6 +4,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 
 import * as schema from "@/db/schema";
+import { isRecord } from "@/lib/validation";
 
 import {
   auth,
@@ -18,12 +19,15 @@ import {
 } from "./harness";
 
 async function json(response: Response) {
-  return (await response.json().catch(() => null)) as { user: Record<string, unknown> } | null;
+  const body: unknown = await response.json().catch(() => null);
+  return isRecord(body) && isRecord(body.user) ? { user: body.user } : null;
 }
 
 async function getSession(cookie: string) {
   const response = await auth.handler(
-    new Request("http://localhost:3000/api/auth/get-session", { headers: { cookie } }),
+    new Request("http://localhost:3000/api/auth/get-session", {
+      headers: { cookie },
+    }),
   );
   return json(response);
 }
@@ -67,7 +71,12 @@ describe("staff lifecycle over the HTTP handler", () => {
     for (const [path, body] of [
       [
         "/admin/create-user",
-        { name: "X", email: uniqueEmail("x"), password: PASSWORD, role: "agent" },
+        {
+          name: "X",
+          email: uniqueEmail("x"),
+          password: PASSWORD,
+          role: "agent",
+        },
       ],
       ["/admin/set-role", { userId: admin.id, role: "agent" }],
       ["/admin/ban-user", { userId: admin.id }],
@@ -121,7 +130,11 @@ describe("staff lifecycle over the HTTP handler", () => {
     expect(update.status).toBeGreaterThanOrEqual(400);
     expect((await getSession(cookie!))?.user.role).toBe("agent");
 
-    const flag = await post("/update-user", { mustChangePassword: false }, { cookie: cookie! });
+    const flag = await post(
+      "/update-user",
+      { mustChangePassword: false },
+      { cookie: cookie! },
+    );
     expect(flag.status).toBeGreaterThanOrEqual(400);
   });
 
@@ -132,7 +145,11 @@ describe("staff lifecycle over the HTTP handler", () => {
     const agentCookie = (await signIn(agent.email)).cookie!;
     expect((await getSession(agentCookie))?.user.email).toBe(agent.email);
 
-    const banned = await post("/admin/ban-user", { userId: agent.id }, { cookie: adminCookie });
+    const banned = await post(
+      "/admin/ban-user",
+      { userId: agent.id },
+      { cookie: adminCookie },
+    );
     expect(banned.status).toBe(200);
 
     expect(await getSession(agentCookie)).toBeNull();
@@ -172,7 +189,10 @@ describe("passwords", () => {
         { name: "Short", email, password, role: "agent" },
         { cookie },
       );
-      expect({ password, status: response.status }).toEqual({ password, status: 400 });
+      expect({ password, status: response.status }).toEqual({
+        password,
+        status: 400,
+      });
     }
 
     const context = await auth.$context;
@@ -224,7 +244,9 @@ describe("passwords", () => {
 
     const first = await signIn(email, "temporary-password");
     const other = await signIn(email, "temporary-password");
-    expect((await getSession(first.cookie!))?.user.mustChangePassword).toBe(true);
+    expect((await getSession(first.cookie!))?.user.mustChangePassword).toBe(
+      true,
+    );
 
     const changed = await post(
       "/change-password",
@@ -240,8 +262,12 @@ describe("passwords", () => {
     const fresh = cookieFrom(changed);
     expect((await getSession(fresh))?.user.mustChangePassword).toBe(false);
     expect(await getSession(other.cookie!)).toBeNull();
-    expect((await signIn(email, "temporary-password")).response.status).toBe(401);
-    expect((await signIn(email, "a-brand-new-password")).response.status).toBe(200);
+    expect((await signIn(email, "temporary-password")).response.status).toBe(
+      401,
+    );
+    expect((await signIn(email, "a-brand-new-password")).response.status).toBe(
+      200,
+    );
   });
 
   test("an admin password reset flags the account and revokes its sessions", async () => {
@@ -259,7 +285,9 @@ describe("passwords", () => {
     expect(await getSession(agentCookie)).toBeNull();
 
     const again = await signIn(agent.email, "reset-by-the-admin");
-    expect((await getSession(again.cookie!))?.user.mustChangePassword).toBe(true);
+    expect((await getSession(again.cookie!))?.user.mustChangePassword).toBe(
+      true,
+    );
   });
 });
 
@@ -268,7 +296,12 @@ describe("unauthenticated calls to the auth handler", () => {
     for (const [path, body] of [
       [
         "/admin/create-user",
-        { name: "X", email: uniqueEmail("x"), password: PASSWORD, role: "agent" },
+        {
+          name: "X",
+          email: uniqueEmail("x"),
+          password: PASSWORD,
+          role: "agent",
+        },
       ],
       ["/admin/set-role", { userId: "x", role: "admin" }],
       ["/admin/ban-user", { userId: "x" }],
@@ -277,13 +310,18 @@ describe("unauthenticated calls to the auth handler", () => {
       ["/admin/set-user-password", { userId: "x", newPassword: PASSWORD }],
       ["/admin/remove-user", { userId: "x" }],
       ["/admin/update-user", { userId: "x", data: { role: "admin" } }],
-      ["/change-password", { currentPassword: PASSWORD, newPassword: "another-long-password" }],
+      [
+        "/change-password",
+        { currentPassword: PASSWORD, newPassword: "another-long-password" },
+      ],
     ] as const) {
       const response = await post(path, body);
       expect({ path, status: response.status }).toEqual({ path, status: 401 });
     }
 
-    const list = await auth.handler(new Request("http://localhost:3000/api/auth/admin/list-users"));
+    const list = await auth.handler(
+      new Request("http://localhost:3000/api/auth/admin/list-users"),
+    );
     expect(list.status).toBe(401);
   });
 });

@@ -1,17 +1,28 @@
-import { isRole, MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH, type Role } from "@/lib/roles";
+import {
+  isRole,
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  type Role,
+} from "@/lib/roles";
 
 export type Parsed<T> = { ok: true; value: T } | { ok: false; error: string };
 
-const fail = (error: string): { ok: false; error: string } => ({ ok: false, error });
+const fail = (error: string): { ok: false; error: string } => ({
+  ok: false,
+  error,
+});
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const isValidEmail = (value: string) => value.length <= 254 && EMAIL.test(value);
+export const isValidEmail = (value: string) =>
+  value.length <= 254 && EMAIL.test(value);
+
+export function isRecord(input: unknown): input is Record<string, unknown> {
+  return typeof input === "object" && input !== null && !Array.isArray(input);
+}
 
 function record(input: unknown): Record<string, unknown> | null {
-  return typeof input === "object" && input !== null && !Array.isArray(input)
-    ? (input as Record<string, unknown>)
-    : null;
+  return isRecord(input) ? input : null;
 }
 
 function text(value: unknown, max: number): string | null {
@@ -22,7 +33,10 @@ function text(value: unknown, max: number): string | null {
 
 function password(value: unknown): string | null {
   if (typeof value !== "string") return null;
-  return value.length >= MIN_PASSWORD_LENGTH && value.length <= MAX_PASSWORD_LENGTH ? value : null;
+  return value.length >= MIN_PASSWORD_LENGTH &&
+    value.length <= MAX_PASSWORD_LENGTH
+    ? value
+    : null;
 }
 
 const PASSWORD_ERROR = `Password must be ${MIN_PASSWORD_LENGTH} to ${MAX_PASSWORD_LENGTH} characters.`;
@@ -56,28 +70,35 @@ export function parseUserId(input: unknown): Parsed<{ userId: string }> {
   return userId ? { ok: true, value: { userId } } : fail("Invalid user.");
 }
 
-export function parseSetRole(input: unknown): Parsed<{ userId: string; role: Role }> {
+export function parseSetRole(
+  input: unknown,
+): Parsed<{ userId: string; role: Role }> {
   const id = parseUserId(input);
   if (!id.ok) return id;
-  const role = (input as Record<string, unknown>).role;
+  const role = record(input)?.role;
   if (!isRole(role)) return fail("Choose a role.");
   return { ok: true, value: { userId: id.value.userId, role } };
 }
 
-export function parseBan(input: unknown): Parsed<{ userId: string; reason?: string }> {
+export function parseBan(
+  input: unknown,
+): Parsed<{ userId: string; reason?: string }> {
   const id = parseUserId(input);
   if (!id.ok) return id;
-  const raw = (input as Record<string, unknown>).reason;
-  if (raw === undefined || raw === "") return { ok: true, value: { userId: id.value.userId } };
+  const raw = record(input)?.reason;
+  if (raw === undefined || raw === "")
+    return { ok: true, value: { userId: id.value.userId } };
   const reason = text(raw, 200);
   if (!reason) return fail("The reason must be up to 200 characters.");
   return { ok: true, value: { userId: id.value.userId, reason } };
 }
 
-export function parseResetPassword(input: unknown): Parsed<{ userId: string; password: string }> {
+export function parseResetPassword(
+  input: unknown,
+): Parsed<{ userId: string; password: string }> {
   const id = parseUserId(input);
   if (!id.ok) return id;
-  const pass = password((input as Record<string, unknown>).password);
+  const pass = password(record(input)?.password);
   if (!pass) return fail(PASSWORD_ERROR);
   return { ok: true, value: { userId: id.value.userId, password: pass } };
 }
