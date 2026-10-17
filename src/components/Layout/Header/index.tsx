@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { navLinks } from "@/app/api/navlink";
 import { authClient } from "@/lib/auth-client";
@@ -31,17 +31,20 @@ const Header: React.FC = () => {
 
   const sideMenuRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (sideMenuRef.current && !sideMenuRef.current.contains(event.target as Node)) {
-      setNavbarOpen(false);
-    }
-  };
-
-  const handleScroll = useCallback(() => {
-    setSticky(window.scrollY >= 50);
-  }, []);
-
   useEffect(() => {
+    const handleScroll = () => {
+      setSticky(window.scrollY >= 50);
+    };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        sideMenuRef.current &&
+        !sideMenuRef.current.contains(event.target)
+      ) {
+        setNavbarOpen(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -49,7 +52,7 @@ const Header: React.FC = () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleScroll]);
+  }, []);
 
   const isHomepage = pathname === "/";
 
@@ -69,7 +72,15 @@ const Header: React.FC = () => {
                 width={140}
                 height={40}
                 unoptimized={true}
-                className={`${isHomepage ? (sticky ? "block dark:hidden" : "hidden") : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                className={
+                  isHomepage
+                    ? sticky
+                      ? "block dark:hidden"
+                      : "hidden"
+                    : sticky
+                      ? "block dark:hidden"
+                      : "block dark:hidden"
+                }
               />
               <Image
                 src={"/images/header/logo.svg"}
@@ -77,7 +88,15 @@ const Header: React.FC = () => {
                 width={140}
                 height={40}
                 unoptimized={true}
-                className={`${isHomepage ? (sticky ? "hidden dark:block" : "block") : sticky ? "hidden dark:block" : "hidden dark:block"}`}
+                className={
+                  isHomepage
+                    ? sticky
+                      ? "hidden dark:block"
+                      : "block"
+                    : sticky
+                      ? "hidden dark:block"
+                      : "hidden dark:block"
+                }
               />
             </Link>
           </div>
@@ -91,7 +110,11 @@ const Header: React.FC = () => {
                 width={32}
                 height={32}
                 className={`block dark:hidden ${
-                  isHomepage ? (sticky ? "text-dark" : "text-white") : "text-dark"
+                  isHomepage
+                    ? sticky
+                      ? "text-dark"
+                      : "text-white"
+                    : "text-dark"
                 }`}
               />
               <Icon
@@ -154,7 +177,12 @@ const Header: React.FC = () => {
                 aria-label="Close mobile menu"
                 className="rounded-full bg-white p-3 hover:cursor-pointer"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     fill="none"
                     stroke="black"
@@ -168,8 +196,12 @@ const Header: React.FC = () => {
             </div>
             <nav className="flex flex-col items-start gap-4">
               <ul className="w-full">
-                {navLinks.map((item, index) => (
-                  <NavLink key={index} item={item} onClick={() => setNavbarOpen(false)} />
+                {navLinks.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    onClick={() => setNavbarOpen(false)}
+                  />
                 ))}
                 <li className="flex items-center gap-4">
                   {isStaff ? (
@@ -204,7 +236,9 @@ const Header: React.FC = () => {
           </div>
 
           <div className="my-16 flex flex-col gap-1 text-white">
-            <p className="sm:text-xm text-base font-normal text-white/40">Contact</p>
+            <p className="sm:text-xm text-base font-normal text-white/40">
+              Contact
+            </p>
             <Link
               href="#"
               className="sm:text-xm hover:text-primary text-base font-medium text-inherit"

@@ -11,7 +11,7 @@ import { testimonials } from "@/app/api/testimonial";
 export default function Details() {
   const { slug } = useParams();
 
-  const item = propertyHomes.find((item) => item.slug === slug);
+  const item = propertyHomes.find((home) => home.slug === slug);
   return (
     <section className="relative !pt-44 pb-20">
       <div className="max-w-8xl container mx-auto px-5 2xl:px-0">
@@ -27,7 +27,9 @@ export default function Details() {
                 height={24}
                 className="text-dark/50 dark:text-white/50"
               />
-              <p className="text-dark/50 text-xm dark:text-white/50">{item?.location}</p>
+              <p className="text-dark/50 text-xm dark:text-white/50">
+                {item?.location}
+              </p>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-4">
@@ -45,7 +47,11 @@ export default function Details() {
                 </p>
               </div>
               <div className="xs:pl-4 mobile:pl-8 flex flex-col gap-2 pl-2">
-                <Icon icon={"lineicons:arrow-all-direction"} width={20} height={20} />
+                <Icon
+                  icon={"lineicons:arrow-all-direction"}
+                  width={20}
+                  height={20}
+                />
                 <p className="mobile:text-base text-sm font-normal text-black dark:text-white">
                   {item?.area}m<sup>2</sup>
                 </p>
@@ -129,7 +135,9 @@ export default function Details() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-dark text-xm dark:text-white">Property details</h3>
+                  <h3 className="text-dark text-xm dark:text-white">
+                    Property details
+                  </h3>
                   <p className="text-dark/50 text-base dark:text-white/50">
                     One of the few homes in the area with a private pool.
                   </p>
@@ -155,7 +163,9 @@ export default function Details() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-dark text-xm dark:text-white">Smart home access</h3>
+                  <h3 className="text-dark text-xm dark:text-white">
+                    Smart home access
+                  </h3>
                   <p className="text-dark/50 text-base dark:text-white/50">
                     Easily check yourself in with a modern keypad system.
                   </p>
@@ -181,7 +191,9 @@ export default function Details() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-dark text-xm dark:text-white">Energy efficient</h3>
+                  <h3 className="text-dark text-xm dark:text-white">
+                    Energy efficient
+                  </h3>
                   <p className="text-dark/50 text-base dark:text-white/50">
                     Built in 2025 with sustainable and smart-home features.
                   </p>
@@ -190,31 +202,38 @@ export default function Details() {
             </div>
             <div className="flex flex-col gap-5">
               <p className="text-dark text-xm dark:text-white">
-                Nestled in the heart of miami, the modern luxe villa at 20 s aurora ave offers a
-                perfect blend of contemporary elegance and smart-home innovation. priced at $570000,
-                this 560 ft² residence features 4 spacious bedrooms, 3 luxurious bathrooms, and
-                expansive living areas designed for comfort and style. built in 2025, the home
-                boasts energy-efficient systems, abundant natural light, and state-of-the-art
-                security features. outdoor spaces include two stylish bar areas, perfect for
-                entertaining 8+ guests. enjoy the ultimate in modern living with premium amenities
-                and a prime location.
+                Nestled in the heart of miami, the modern luxe villa at 20 s
+                aurora ave offers a perfect blend of contemporary elegance and
+                smart-home innovation. priced at $570000, this 560 ft² residence
+                features 4 spacious bedrooms, 3 luxurious bathrooms, and
+                expansive living areas designed for comfort and style. built in
+                2025, the home boasts energy-efficient systems, abundant natural
+                light, and state-of-the-art security features. outdoor spaces
+                include two stylish bar areas, perfect for entertaining 8+
+                guests. enjoy the ultimate in modern living with premium
+                amenities and a prime location.
               </p>
               <p className="text-dark text-xm dark:text-white">
-                Step inside to discover an open-concept layout that seamlessly connects the kitchen,
-                dining, and living spaces. the gourmet kitchen is equipped with top-of-the-line
-                appliances, sleek cabinetry, and a large island perfect for casual dining or meal
-                prep. the sunlit living room offers floor-to-ceiling windows, creating a bright and
-                airy atmosphere while providing stunning views of the outdoor space.
+                Step inside to discover an open-concept layout that seamlessly
+                connects the kitchen, dining, and living spaces. the gourmet
+                kitchen is equipped with top-of-the-line appliances, sleek
+                cabinetry, and a large island perfect for casual dining or meal
+                prep. the sunlit living room offers floor-to-ceiling windows,
+                creating a bright and airy atmosphere while providing stunning
+                views of the outdoor space.
               </p>
               <p className="text-dark text-xm dark:text-white">
-                The primary suite serves as a private retreat with a spa-like ensuite bathroom and a
-                spacious walk-in closet. each additional bedroom is thoughtfully designed with
-                comfort and style in mind, offering ample space and modern finishes. the home’s
-                three bathrooms feature high-end fixtures, custom vanities, and elegant tiling.
+                The primary suite serves as a private retreat with a spa-like
+                ensuite bathroom and a spacious walk-in closet. each additional
+                bedroom is thoughtfully designed with comfort and style in mind,
+                offering ample space and modern finishes. the home’s three
+                bathrooms feature high-end fixtures, custom vanities, and
+                elegant tiling.
               </p>
               <p className="text-dark text-xm dark:text-white">
-                Outdoor living is equally impressive, with a beautifully landscaped backyard,
-                multiple lounge areas, and two fully equipped bar spaces.
+                Outdoor living is equally impressive, with a beautifully
+                landscaped backyard, multiple lounge areas, and two fully
+                equipped bar spaces.
               </p>
             </div>
             <div className="border-dark/5 mt-8 border-t py-8 dark:border-white/15">
@@ -227,7 +246,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Smart Home Integration</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Smart Home Integration
+                  </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -236,7 +257,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Spacious Living Areas</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Spacious Living Areas
+                  </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -245,7 +268,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Energy Efficiency</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Energy Efficiency
+                  </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -254,7 +279,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Natural Light</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Natural Light
+                  </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -263,7 +290,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Security Systems</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Security Systems
+                  </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -272,7 +301,9 @@ export default function Details() {
                     height={24}
                     className="text-dark dark:text-white"
                   />
-                  <p className="text-dark text-base dark:text-white">Outdoor Spaces</p>
+                  <p className="text-dark text-base dark:text-white">
+                    Outdoor Spaces
+                  </p>
                 </div>
               </div>
             </div>
@@ -280,6 +311,11 @@ export default function Details() {
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d938779.7831767448!2d71.05098621661072!3d23.20271516446136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e82dd003ff749%3A0x359e803f537cea25!2sGANESH%20GLORY%2C%20Gota%2C%20Ahmedabad%2C%20Gujarat%20382481!5e0!3m2!1sen!2sin!4v1715676641521!5m2!1sen!2sin"
               width="1114"
               height="400"
+              title="Property location"
+              // Google Maps requires scripts and same-origin access in this
+              // embedded document, so the sandbox must allow both tokens.
+              // oxlint-disable-next-line react/iframe-missing-sandbox
+              sandbox="allow-scripts allow-same-origin allow-popups"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="w-full rounded-2xl"
@@ -287,8 +323,12 @@ export default function Details() {
           </div>
           <div className="col-span-12 lg:col-span-4">
             <div className="bg-primary/10 relative z-10 overflow-hidden rounded-2xl p-8">
-              <h4 className="text-dark text-3xl font-medium dark:text-white">{item?.rate}</h4>
-              <p className="text-dark/50 text-sm dark:text-white">Discounted Price</p>
+              <h4 className="text-dark text-3xl font-medium dark:text-white">
+                {item?.rate}
+              </h4>
+              <p className="text-dark/50 text-sm dark:text-white">
+                Discounted Price
+              </p>
               <Link
                 href="#"
                 className="bg-primary hover:bg-dark mt-8 block w-full rounded-full px-8 py-4 text-center text-base text-white duration-300 hover:cursor-pointer"
@@ -305,25 +345,36 @@ export default function Details() {
                 />
               </div>
             </div>
-            {testimonials.slice(0, 1).map((item, index) => (
+            {testimonials.slice(0, 1).map((testimonial) => (
               <div
-                key={index}
+                key={testimonial.name}
                 className="border-dark/10 mt-10 flex flex-col gap-6 rounded-2xl border p-10 dark:border-white/20"
               >
-                <Icon icon="ph:house-simple" width={44} height={44} className="text-primary" />
-                <p className="text-xm text-dark dark:text-white">{item.review}</p>
+                <Icon
+                  icon="ph:house-simple"
+                  width={44}
+                  height={44}
+                  className="text-primary"
+                />
+                <p className="text-xm text-dark dark:text-white">
+                  {testimonial.review}
+                </p>
                 <div className="flex items-center gap-6">
                   <Image
-                    src={item.image}
-                    alt={item.name}
+                    src={testimonial.image}
+                    alt={testimonial.name}
                     width={400}
                     height={500}
                     className="h-20 w-20 rounded-2xl"
                     unoptimized={true}
                   />
                   <div className="">
-                    <h3 className="text-xm text-dark dark:text-white">{item.name}</h3>
-                    <h4 className="text-dark/50 text-base dark:text-white/50">{item.position}</h4>
+                    <h3 className="text-xm text-dark dark:text-white">
+                      {testimonial.name}
+                    </h3>
+                    <h4 className="text-dark/50 text-base dark:text-white/50">
+                      {testimonial.position}
+                    </h4>
                   </div>
                 </div>
               </div>

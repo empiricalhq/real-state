@@ -21,7 +21,9 @@ const BlogSmall: React.FC = () => {
               />
               Blog
             </p>
-            <h2 className="lg:text-52 text-40 font-medium dark:text-white">Real estate insights</h2>
+            <h2 className="lg:text-52 text-40 font-medium dark:text-white">
+              Real estate insights
+            </h2>
             <p className="text-dark/50 text-xm dark:text-white/50">
               Stay ahead in the property market with expert advice and updates
             </p>
@@ -35,8 +37,8 @@ const BlogSmall: React.FC = () => {
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((blog, i) => (
-            <div key={i} className="w-full">
+          {posts.map((blog) => (
+            <div key={blog.slug} className="w-full">
               <BlogCard blog={blog} />
             </div>
           ))}

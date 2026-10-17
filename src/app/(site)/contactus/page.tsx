@@ -12,17 +12,24 @@ export default function ContactUs() {
       <div className="mb-16">
         <div className="mb-3 flex items-center justify-center gap-2.5">
           <span>
-            <Icon icon={"ph:house-simple-fill"} width={20} height={20} className="text-primary" />
+            <Icon
+              icon={"ph:house-simple-fill"}
+              width={20}
+              height={20}
+              className="text-primary"
+            />
           </span>
-          <p className="text-badge text-base font-semibold dark:text-white/90">Contact us</p>
+          <p className="text-badge text-base font-semibold dark:text-white/90">
+            Contact us
+          </p>
         </div>
         <div className="text-center">
           <h3 className="sm:text-52 mb-3 text-4xl leading-10 font-medium tracking-tighter text-black sm:leading-14 dark:text-white">
             Have questions? ready to help!
           </h3>
           <p className="text-xm leading-6 font-normal tracking-tight text-black/50 dark:text-white/50">
-            Looking for your dream home or ready to sell? Our expert team offers personalized
-            guidance and market expertise tailored to you.
+            Looking for your dream home or ready to sell? Our expert team offers
+            personalized guidance and market expertise tailored to you.
           </p>
         </div>
       </div>
@@ -42,7 +49,8 @@ export default function ContactUs() {
                 Contact information
               </h5>
               <p className="xs:text-base mobile:text-xm text-sm font-normal text-white/80">
-                Ready to find your dream home or sell your property? We’re here to help!
+                Ready to find your dream home or sell your property? We’re here
+                to help!
               </p>
             </div>
             <div className="absolute bottom-6 left-6 flex flex-col gap-4 text-white lg:bottom-12 lg:left-12">
@@ -87,7 +95,7 @@ export default function ContactUs() {
                     type="number"
                     name="mobile"
                     id="mobile"
-                    autoComplete="mobile"
+                    autoComplete="tel"
                     placeholder="Phone number*"
                     required
                     className="outline-primary w-full rounded-full border border-black/10 px-6 py-3.5 focus:outline dark:border-white/10"

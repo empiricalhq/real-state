@@ -37,7 +37,9 @@ export const Introduction = () => {
     <>
       <div id="version" className="scroll-m-28 md:scroll-m-45">
         {docNavbarOpen && (
-          <div
+          <button
+            type="button"
+            aria-label="Close navigation"
             className="fixed top-0 left-0 z-40 h-full w-full bg-black/50"
             onClick={() => setDocNavbarOpen(false)}
           />
@@ -78,14 +80,16 @@ export const Introduction = () => {
         </div>
         <div className="mt-5">
           <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
-            Homely Tailwind NextJs Template is built with Tailwindcss and Nextjs.
+            Homely Tailwind NextJs Template is built with Tailwindcss and
+            Nextjs.
           </p>
           <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
-            These theme is ready to use and you can totally customize as per your requirement.
+            These theme is ready to use and you can totally customize as per
+            your requirement.
           </p>
           <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
-            For Customize, You should have knowledge of NextJs, ReactJs, Tailwind and JSX to be able
-            to modify these template.
+            For Customize, You should have knowledge of NextJs, ReactJs,
+            Tailwind and JSX to be able to modify these template.
           </p>
         </div>
       </div>
@@ -94,8 +98,13 @@ export const Introduction = () => {
         className={`dark:bg-dark fixed top-0 right-0 block h-full w-full max-w-xs transform bg-white shadow-lg transition-transform duration-300 lg:hidden ${docNavbarOpen ? "translate-x-0" : "translate-x-full"} z-50`}
       >
         <div className="flex items-center justify-between p-4">
-          <h2 className="text-midnight_text text-lg font-bold dark:text-white">Docs Menu</h2>
-          <button onClick={() => setDocNavbarOpen(false)} aria-label="Close mobile menu">
+          <h2 className="text-midnight_text text-lg font-bold dark:text-white">
+            Docs Menu
+          </h2>
+          <button
+            onClick={() => setDocNavbarOpen(false)}
+            aria-label="Close mobile menu"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

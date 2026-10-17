@@ -23,8 +23,8 @@ const Footer = () => {
               </button>
             </div>
             <p className="order-1 text-sm text-white/40 lg:order-2 lg:max-w-[45%]">
-              By subscribing, you agree to receive our promotional emails. You can unsubscribe at
-              any time.
+              By subscribing, you agree to receive our promotional emails. You
+              can unsubscribe at any time.
             </p>
           </div>
           <div className="flex items-center gap-6">
@@ -69,9 +69,12 @@ const Footer = () => {
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-3">
               <div className="flex w-fit flex-col gap-4">
-                {FooterLinks.slice(0, 4).map((item, index) => (
-                  <div key={index}>
-                    <Link href={item.href} className="text-xm text-white/40 hover:text-white">
+                {FooterLinks.slice(0, 4).map((item) => (
+                  <div key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-xm text-white/40 hover:text-white"
+                    >
                       {item.label}
                     </Link>
                   </div>
@@ -80,9 +83,12 @@ const Footer = () => {
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-2">
               <div className="flex w-fit flex-col gap-4">
-                {FooterLinks.slice(4, 8).map((item, index) => (
-                  <div key={index}>
-                    <Link href={item.href} className="text-xm text-white/40 hover:text-white">
+                {FooterLinks.slice(4, 8).map((item) => (
+                  <div key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-xm text-white/40 hover:text-white"
+                    >
                       {item.label}
                     </Link>
                   </div>

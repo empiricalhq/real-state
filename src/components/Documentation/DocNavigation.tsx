@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const DocNavigation = () => {
   const [navItem, setNavItem] = useState("version");
@@ -8,8 +8,6 @@ export const DocNavigation = () => {
   function getNavItem(item: string) {
     setNavItem(item);
   }
-
-  useEffect(() => {}, [navItem]);
 
   const DocsNav = [
     {

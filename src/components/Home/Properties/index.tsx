@@ -11,9 +11,16 @@ const Properties: React.FC = () => {
         <div className="mb-16 flex flex-col gap-3">
           <div className="flex items-center justify-center gap-2.5">
             <span>
-              <Icon icon={"ph:house-simple-fill"} width={20} height={20} className="text-primary" />
+              <Icon
+                icon={"ph:house-simple-fill"}
+                width={20}
+                height={20}
+                className="text-primary"
+              />
             </span>
-            <p className="text-dark/75 text-base font-semibold dark:text-white/75">Properties</p>
+            <p className="text-dark/75 text-base font-semibold dark:text-white/75">
+              Properties
+            </p>
           </div>
           <h2 className="text-40 lg:text-52 mb-2 text-center leading-11 font-medium tracking-tight text-black dark:text-white">
             Discover inspiring designed homes.
@@ -24,8 +31,8 @@ const Properties: React.FC = () => {
         </div>
         <div className="@container">
           <div className="grid grid-cols-1 gap-10 @md:grid-cols-2 @xl:grid-cols-3">
-            {propertyHomes.slice(0, 6).map((item, index) => (
-              <div key={index}>
+            {propertyHomes.slice(0, 6).map((item) => (
+              <div key={item.slug}>
                 <PropertyCard item={item} />
               </div>
             ))}

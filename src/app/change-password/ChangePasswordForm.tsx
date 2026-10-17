@@ -18,8 +18,14 @@ export default function ChangePasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (next !== confirm) return toast.error("The new passwords do not match.");
-    if (next === current) return toast.error("Choose a password different from the current one.");
+    if (next !== confirm) {
+      toast.error("The new passwords do not match.");
+      return;
+    }
+    if (next === current) {
+      toast.error("Choose a password different from the current one.");
+      return;
+    }
 
     setPending(true);
     const { error } = await authClient.changePassword({
