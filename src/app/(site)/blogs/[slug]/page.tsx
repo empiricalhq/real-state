@@ -6,7 +6,9 @@ import Link from "next/link";
 import { getPost } from "@/components/utils/markdown";
 import markdownToHtml from "@/components/utils/markdownToHtml";
 
-export async function generateMetadata({ params }: any) {
+type PostProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: PostProps) {
   const data = await params;
   const post = getPost(data.slug);
 
@@ -31,7 +33,7 @@ export async function generateMetadata({ params }: any) {
   };
 }
 
-export default async function Post({ params }: any) {
+export default async function Post({ params }: PostProps) {
   const data = await params;
   const post = getPost(data.slug);
 
@@ -47,13 +49,20 @@ export default async function Post({ params }: any) {
                 href="/blogs"
                 className="bg-primary hover:bg-dark flex w-fit items-center gap-3 rounded-full px-4 py-3 text-white duration-300"
               >
-                <Icon icon={"ph:arrow-left"} width={20} height={20} className="" />
+                <Icon
+                  icon={"ph:arrow-left"}
+                  width={20}
+                  height={20}
+                  className=""
+                />
                 <span>Go Back</span>
               </Link>
               <h2 className="text-dark md:text-52 text-40 pt-7 leading-[1.2] font-semibold dark:text-white">
                 {post.title}
               </h2>
-              <h6 className="text-xm text-dark mt-5 dark:text-white">{post.detail}</h6>
+              <h6 className="text-xm text-dark mt-5 dark:text-white">
+                {post.detail}
+              </h6>
             </div>
             <div className="mt-12 flex items-center justify-between gap-6">
               <div className="flex items-center gap-4">
@@ -67,7 +76,9 @@ export default async function Post({ params }: any) {
                   unoptimized={true}
                 />
                 <div>
-                  <span className="text-xm text-dark dark:text-white">{post.author}</span>
+                  <span className="text-xm text-dark dark:text-white">
+                    {post.author}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-7">
@@ -78,7 +89,9 @@ export default async function Post({ params }: any) {
                   </span>
                 </div>
                 <div className="bg-dark/5 rounded-full px-5 py-2.5 dark:bg-white/15">
-                  <p className="text-dark text-sm font-semibold dark:text-white">{post.tag}</p>
+                  <p className="text-dark text-sm font-semibold dark:text-white">
+                    {post.tag}
+                  </p>
                 </div>
               </div>
             </div>
