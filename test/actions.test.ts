@@ -5,7 +5,14 @@ import { eq } from "drizzle-orm";
 
 import * as schema from "@/db/schema";
 
-import { database, headersFor, PASSWORD, signedInAs, signIn, uniqueEmail } from "./harness";
+import {
+  database,
+  headersFor,
+  PASSWORD,
+  signedInAs,
+  signIn,
+  uniqueEmail,
+} from "./harness";
 
 // These tests call the real server actions and the real route handler. Only the
 // pieces that need Next's request scope are stubbed, the way Next behaves inside
@@ -61,6 +68,9 @@ async function refusal(operation: () => Promise<unknown>) {
   return null;
 }
 
+const byId = <T extends { id: string }>(list: T[]) =>
+  list.toSorted((a, b) => a.id.localeCompare(b.id));
+
 // Every row of every auth table, so any change at all shows up.
 async function snapshot() {
   const rows = {
@@ -68,8 +78,6 @@ async function snapshot() {
     sessions: await database.select().from(schema.session),
     accounts: await database.select().from(schema.account),
   };
-  const byId = <T extends { id: string }>(list: T[]) =>
-    list.sort((a, b) => a.id.localeCompare(b.id));
   return JSON.stringify({
     users: byId(rows.users),
     sessions: byId(rows.sessions),
@@ -78,17 +86,27 @@ async function snapshot() {
 }
 
 async function userRow(id: string) {
-  const [row] = await database.select().from(schema.user).where(eq(schema.user.id, id));
+  const [row] = await database
+    .select()
+    .from(schema.user)
+    .where(eq(schema.user.id, id));
   return row;
 }
 
 async function sessionCount(userId: string) {
-  return (await database.select().from(schema.session).where(eq(schema.session.userId, userId)))
-    .length;
+  return (
+    await database
+      .select()
+      .from(schema.session)
+      .where(eq(schema.session.userId, userId))
+  ).length;
 }
 
 async function userByEmail(email: string) {
-  const [row] = await database.select().from(schema.user).where(eq(schema.user.email, email));
+  const [row] = await database
+    .select()
+    .from(schema.user)
+    .where(eq(schema.user.email, email));
   return row;
 }
 
@@ -133,7 +151,10 @@ const cases: Record<
   unbanStaffAction: {
     input: (t) => ({ userId: t.id }),
     prepare: async (t) => {
-      await database.update(schema.user).set({ banned: true }).where(eq(schema.user.id, t.id));
+      await database
+        .update(schema.user)
+        .set({ banned: true })
+        .where(eq(schema.user.id, t.id));
     },
     done: async (t) => expect((await userRow(t.id))?.banned).toBe(false),
   },
@@ -146,20 +167,26 @@ const cases: Record<
     done: async (t) => {
       expect((await userRow(t.id))?.mustChangePassword).toBe(true);
       expect((await signIn(t.email)).response.status).toBe(401);
-      expect((await signIn(t.email, "an-attackers-password")).response.status).toBe(200);
+      expect(
+        (await signIn(t.email, "an-attackers-password")).response.status,
+      ).toBe(200);
     },
   },
 };
 
 async function newTarget(): Promise<Target> {
   const victim = await signedInAs("agent");
-  return { id: victim.id, email: victim.email, newEmail: uniqueEmail("created") };
+  return {
+    id: victim.id,
+    email: victim.email,
+    newEmail: uniqueEmail("created"),
+  };
 }
 
 const exported = Object.entries(actions)
   .filter(([, value]) => typeof value === "function")
   .map(([name]) => name)
-  .sort();
+  .toSorted();
 
 describe("server actions, called for real", () => {
   for (const name of exported) {
@@ -170,7 +197,9 @@ describe("server actions, called for real", () => {
         const calls = revalidated.length;
 
         as(null);
-        expect(await refusal(() => actions[name]!(cases[name]!.input(target)))).toBe("/signin");
+        expect(
+          await refusal(() => actions[name](cases[name].input(target))),
+        ).toBe("/signin");
 
         expect(await snapshot()).toBe(before);
         expect(revalidated.length).toBe(calls);
@@ -181,7 +210,9 @@ describe("server actions, called for real", () => {
         const before = await snapshot();
 
         as("better-auth.session_token=forged");
-        expect(await refusal(() => actions[name]!(cases[name]!.input(target)))).toBe("/signin");
+        expect(
+          await refusal(() => actions[name](cases[name].input(target))),
+        ).toBe("/signin");
 
         expect(await snapshot()).toBe(before);
       });
@@ -189,12 +220,14 @@ describe("server actions, called for real", () => {
       test("with an agent session it redirects to /dashboard and changes nothing", async () => {
         const agent = await signedInAs("agent");
         const target = await newTarget();
-        await cases[name]!.prepare?.(target);
+        await cases[name].prepare?.(target);
         const before = await snapshot();
         const calls = revalidated.length;
 
         as(agent.cookie);
-        expect(await refusal(() => actions[name]!(cases[name]!.input(target)))).toBe("/dashboard");
+        expect(
+          await refusal(() => actions[name](cases[name].input(target))),
+        ).toBe("/dashboard");
 
         expect(await snapshot()).toBe(before);
         expect(revalidated.length).toBe(calls);
@@ -206,9 +239,9 @@ describe("server actions, called for real", () => {
         const before = await snapshot();
 
         as(agent.cookie);
-        expect(await refusal(() => actions[name]!(cases[name]!.input(target)))).toBe(
-          "/change-password",
-        );
+        expect(
+          await refusal(() => actions[name](cases[name].input(target))),
+        ).toBe("/change-password");
 
         expect(await snapshot()).toBe(before);
       });
@@ -216,15 +249,17 @@ describe("server actions, called for real", () => {
       test("with an admin session it does its job", async () => {
         const admin = await signedInAs("admin");
         const target = await newTarget();
-        await cases[name]!.prepare?.(target);
+        await cases[name].prepare?.(target);
         const before = await snapshot();
         const calls = revalidated.length;
 
         as(admin.cookie);
-        expect(await actions[name]!(cases[name]!.input(target))).toEqual({ ok: true });
+        expect(await actions[name](cases[name].input(target))).toEqual({
+          ok: true,
+        });
 
         expect(await snapshot()).not.toBe(before);
-        await cases[name]!.done(target);
+        await cases[name].done(target);
         expect(revalidated.slice(calls)).toEqual(["/dashboard/staff"]);
       });
     });
@@ -237,13 +272,20 @@ describe("server actions, called for real", () => {
     const input = { userId: target.id, role: "admin" };
 
     as(admin.cookie);
-    expect(await actions.setStaffRoleAction!(input)).toEqual({ ok: true });
-    await database.update(schema.user).set({ role: "agent" }).where(eq(schema.user.id, target.id));
+    expect(await actions.setStaffRoleAction(input)).toEqual({ ok: true });
+    await database
+      .update(schema.user)
+      .set({ role: "agent" })
+      .where(eq(schema.user.id, target.id));
 
     as(agent.cookie);
-    expect(await refusal(() => actions.setStaffRoleAction!(input))).toBe("/dashboard");
+    expect(await refusal(() => actions.setStaffRoleAction(input))).toBe(
+      "/dashboard",
+    );
     as(null);
-    expect(await refusal(() => actions.setStaffRoleAction!(input))).toBe("/signin");
+    expect(await refusal(() => actions.setStaffRoleAction(input))).toBe(
+      "/signin",
+    );
     expect((await userRow(target.id))?.role).toBe("agent");
   });
 
@@ -251,12 +293,17 @@ describe("server actions, called for real", () => {
     const admin = await signedInAs("admin");
     const target = await newTarget();
     // Set the flag directly, so the session row survives.
-    await database.update(schema.user).set({ banned: true }).where(eq(schema.user.id, admin.id));
+    await database
+      .update(schema.user)
+      .set({ banned: true })
+      .where(eq(schema.user.id, admin.id));
     const before = await snapshot();
 
     as(admin.cookie);
     for (const name of exported) {
-      expect(await refusal(() => actions[name]!(cases[name]!.input(target)))).toBe("/signin");
+      expect(
+        await refusal(() => actions[name](cases[name].input(target))),
+      ).toBe("/signin");
     }
     expect(await snapshot()).toBe(before);
   });
@@ -266,7 +313,7 @@ describe("route handler, called for real", () => {
   const handlers = Object.entries(route)
     .filter(([, value]) => typeof value === "function")
     .map(([method]) => method)
-    .sort();
+    .toSorted();
 
   const adminCall = (method: string, cookie: string | null, email: string) => {
     const headers = new Headers({
@@ -275,14 +322,19 @@ describe("route handler, called for real", () => {
       "x-forwarded-for": "198.51.100.200",
     });
     if (cookie) headers.set("cookie", cookie);
-    return route[method]!(
+    return route[method](
       new Request("http://localhost:3000/api/auth/admin/create-user", {
         method,
         headers,
         body:
           method === "GET"
             ? undefined
-            : JSON.stringify({ name: "X", email, password: PASSWORD, role: "admin" }),
+            : JSON.stringify({
+                name: "X",
+                email,
+                password: PASSWORD,
+                role: "admin",
+              }),
       }),
     );
   };
@@ -299,8 +351,8 @@ describe("route handler, called for real", () => {
       // POST reaches the endpoint. Other methods do not match it at all.
       const expected = method === "POST" ? [401, 403] : null;
       if (expected) {
-        expect(anonymous.status).toBe(expected[0]!);
-        expect(asAgent.status).toBe(expected[1]!);
+        expect(anonymous.status).toBe(expected[0]);
+        expect(asAgent.status).toBe(expected[1]);
       } else {
         expect(anonymous.status).toBeGreaterThanOrEqual(400);
         expect(asAgent.status).toBeGreaterThanOrEqual(400);
@@ -313,7 +365,7 @@ describe("route handler, called for real", () => {
   test("GET admin/list-users is refused with no session and with an agent session", async () => {
     const agent = await signedInAs("agent");
     const list = (cookie: string | null) =>
-      route.GET!(
+      route.GET(
         new Request("http://localhost:3000/api/auth/admin/list-users", {
           headers: cookie ? { cookie } : {},
         }),
@@ -325,7 +377,9 @@ describe("route handler, called for real", () => {
   });
 
   test("GET /ok is served", async () => {
-    const health = await route.GET!(new Request("http://localhost:3000/api/auth/ok"));
+    const health = await route.GET(
+      new Request("http://localhost:3000/api/auth/ok"),
+    );
     expect(health.status).toBe(200);
   });
 });

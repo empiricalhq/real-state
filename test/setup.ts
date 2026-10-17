@@ -19,7 +19,7 @@ const migrations = join(import.meta.dir, "../drizzle");
 export async function applyMigrations(target: PGlite) {
   for (const file of readdirSync(migrations)
     .filter((name) => name.endsWith(".sql"))
-    .sort()) {
+    .toSorted()) {
     const sql = await Bun.file(join(migrations, file)).text();
     for (const statement of sql.split("--> statement-breakpoint")) {
       if (statement.trim()) await target.exec(statement);
@@ -35,4 +35,7 @@ await applyMigrations(client);
 // The app's own `auth` singleton (src/lib/auth.ts) is built from "@/db". Point
 // that at PGlite, so the real server actions and the real route handler run
 // against this database. No test can reach a pg pool.
-await mock.module("@/db", () => ({ db: database, pool: { end: async () => {} } }));
+await mock.module("@/db", () => ({
+  db: database,
+  pool: { end: async () => {} },
+}));

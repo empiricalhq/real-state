@@ -35,9 +35,9 @@ async function render(search: Record<string, string | string[]> = {}) {
 }
 
 const emails = (html: string) =>
-  [...html.matchAll(/aria-label="Role for ([^"]+)"/g)].map((m) => m[1]!);
+  [...html.matchAll(/aria-label="Role for ([^"]+)"/g)].map((m) => m[1]);
 const hrefs = (html: string) =>
-  [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]!.replace(/&amp;/g, "&"));
+  [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, "&"));
 const rowOf = (html: string, email: string) =>
   html.split("<tr").find((row) => row.includes(`Role for ${email}`)) ?? "";
 
@@ -56,9 +56,12 @@ beforeAll(async () => {
 
   // Top the table up to exactly TOTAL staff, so the page counts below are fixed.
   // The new members are created after every existing one, in order.
-  const [{ existing }] = await database.select({ existing: count() }).from(schema.user);
-  const missing = TOTAL - existing!;
-  if (missing < 1) throw new Error(`${existing} users already exist, more than ${TOTAL}`);
+  const [{ existing }] = await database
+    .select({ existing: count() })
+    .from(schema.user);
+  const missing = TOTAL - existing;
+  if (missing < 1)
+    throw new Error(`${existing} users already exist, more than ${TOTAL}`);
   const start = Date.now() + 60_000;
   const rows = Array.from({ length: missing }, (_, index) => {
     const n = String(index + 1).padStart(3, "0");
@@ -79,15 +82,24 @@ beforeAll(async () => {
 afterAll(async () => {
   await database
     .delete(schema.user)
-    .where(or(like(schema.user.email, `%${DOMAIN}`), inArray(schema.user.id, [adminId])));
+    .where(
+      or(
+        like(schema.user.email, `%${DOMAIN}`),
+        inArray(schema.user.id, [adminId]),
+      ),
+    );
 });
 
 describe("staff page paging", () => {
   test("page 1 shows 50, page 2 shows 50, page 3 shows 20, with none repeated", async () => {
-    const pages = [await render(), await render({ page: "2" }), await render({ page: "3" })];
+    const pages = [
+      await render(),
+      await render({ page: "2" }),
+      await render({ page: "3" }),
+    ];
     expect(pages.map((html) => emails(html).length)).toEqual([50, 50, 20]);
     expect(new Set(pages.flatMap(emails)).size).toBe(TOTAL);
-    expect(await render({ page: "1" })).toBe(pages[0]!);
+    expect(await render({ page: "1" })).toBe(pages[0]);
   });
 
   test("it shows the total and links to the neighbouring pages", async () => {
@@ -129,9 +141,14 @@ describe("staff page paging", () => {
     expect(rowOf(html, last.email)).toContain(">Ban<");
     expect(rowOf(html, last.email)).toContain("Active");
 
-    expect(await banStaffAction({ userId: last.id, reason: "test" })).toEqual({ ok: true });
+    expect(await banStaffAction({ userId: last.id, reason: "test" })).toEqual({
+      ok: true,
+    });
 
-    const [row] = await database.select().from(schema.user).where(eq(schema.user.id, last.id));
+    const [row] = await database
+      .select()
+      .from(schema.user)
+      .where(eq(schema.user.id, last.id));
     expect(row?.banned).toBe(true);
     const after = rowOf(await render({ page: "3" }), last.email);
     expect(after).toContain("Banned");
@@ -157,14 +174,18 @@ describe("staff page paging with equal creation times", () => {
     // Every member gets one timestamp. Rows are updated in reverse id order so that
     // heap order differs from id order.
     const same = new Date(Date.now() + 120_000);
-    for (const member of [...seeded].reverse()) {
+    for (const member of seeded.toReversed()) {
       await database
         .update(schema.user)
         .set({ createdAt: same })
         .where(eq(schema.user.id, member.id));
     }
 
-    const pages = [await render(), await render({ page: "2" }), await render({ page: "3" })];
+    const pages = [
+      await render(),
+      await render({ page: "2" }),
+      await render({ page: "3" }),
+    ];
     const listed = pages.flatMap(emails);
     expect(listed.length).toBe(TOTAL);
     expect(new Set(listed).size).toBe(TOTAL);
@@ -173,7 +194,9 @@ describe("staff page paging with equal creation times", () => {
     const tied = listed.filter((email) => email.endsWith(DOMAIN));
     expect(tied).toEqual(seeded.map((member) => member.email));
     // The tied members cross at least one page boundary, or the test proves nothing.
-    const pagesWithTied = pages.filter((html) => emails(html).some((e) => e.endsWith(DOMAIN)));
+    const pagesWithTied = pages.filter((html) =>
+      emails(html).some((e) => e.endsWith(DOMAIN)),
+    );
     expect(pagesWithTied.length).toBeGreaterThanOrEqual(2);
   });
 });
