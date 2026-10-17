@@ -20,7 +20,8 @@ export default async function ChangePasswordPage() {
         </h1>
         {user.mustChangePassword && (
           <p className="text-dark/70 mb-8 text-center text-base dark:text-white/70">
-            You signed in with a temporary password. Choose a new one to continue.
+            You signed in with a temporary password. Choose a new one to
+            continue.
           </p>
         )}
         <ChangePasswordForm />

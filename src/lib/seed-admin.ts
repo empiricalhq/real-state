@@ -11,7 +11,10 @@ export type SeedAdminInput = { email: string; password: string; name?: string };
 export class SeedAdminError extends Error {}
 
 // Takes the node-postgres database in the seed script and PGlite in the tests.
-type SeedDatabase = Pick<PgDatabase<PgQueryResultHKT, typeof schema>, "transaction">;
+type SeedDatabase = Pick<
+  PgDatabase<PgQueryResultHKT, typeof schema>,
+  "transaction"
+>;
 
 // Any constant works. Every seed run must use the same one.
 const SEED_LOCK_NAME = "real-state.seed-admin";
@@ -24,15 +27,21 @@ const SEED_LOCK_NAME = "real-state.seed-admin";
 export async function seedAdmin(database: SeedDatabase, input: SeedAdminInput) {
   const email = input.email.trim().toLowerCase();
 
-  if (!isValidEmail(email)) throw new SeedAdminError("SEED_ADMIN_EMAIL is not a valid email.");
-  if (input.password.length < MIN_PASSWORD_LENGTH || input.password.length > MAX_PASSWORD_LENGTH) {
+  if (!isValidEmail(email))
+    throw new SeedAdminError("SEED_ADMIN_EMAIL is not a valid email.");
+  if (
+    input.password.length < MIN_PASSWORD_LENGTH ||
+    input.password.length > MAX_PASSWORD_LENGTH
+  ) {
     throw new SeedAdminError(
       `SEED_ADMIN_PASSWORD must be ${MIN_PASSWORD_LENGTH} to ${MAX_PASSWORD_LENGTH} characters.`,
     );
   }
 
   return database.transaction(async (tx) => {
-    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${SEED_LOCK_NAME}))`);
+    await tx.execute(
+      sql`select pg_advisory_xact_lock(hashtext(${SEED_LOCK_NAME}))`,
+    );
 
     // Better Auth on the transaction, so its reads and writes share the lock.
     const context = await createAuth(tx).$context;
@@ -46,7 +55,9 @@ export async function seedAdmin(database: SeedDatabase, input: SeedAdminInput) {
     }
 
     if (await context.internalAdapter.findUserByEmail(email)) {
-      throw new SeedAdminError("A user with that email already exists. Nothing was created.");
+      throw new SeedAdminError(
+        "A user with that email already exists. Nothing was created.",
+      );
     }
 
     const user = await context.internalAdapter.createUser(

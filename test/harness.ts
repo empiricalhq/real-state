@@ -7,14 +7,15 @@ export { applyMigrations, auth, client, createAuth, database };
 export const PASSWORD = "correct-horse-battery";
 
 let counter = 0;
-export const uniqueEmail = (label: string) => `${label}-${++counter}@example.invalid`;
+export const uniqueEmail = (label: string) =>
+  `${label}-${++counter}@example.invalid`;
 
 export function cookieFrom(response: Response) {
   const cookie = response.headers
     .getSetCookie()
     .find((value) => value.includes("better-auth.session_token="));
   if (!cookie) throw new Error("No session cookie in response");
-  return cookie.split(";", 1)[0]!;
+  return cookie.split(";", 1)[0];
 }
 
 // Goes through auth.handler so that rate limiting applies. auth.api calls skip it.
@@ -46,7 +47,13 @@ export async function createUserDirectly(
   const email = uniqueEmail(label);
   const context = await auth.$context;
   const user = await context.internalAdapter.createUser(
-    { name: label, email, emailVerified: true, role, mustChangePassword: mustChange },
+    {
+      name: label,
+      email,
+      emailVerified: true,
+      role,
+      mustChangePassword: mustChange,
+    },
     { method: "admin" },
   );
   await context.internalAdapter.createAccount({
@@ -66,8 +73,15 @@ const nextIp = () => {
 
 // A fresh IP per sign-in keeps the rate limiter out of tests that are not about it.
 export async function signIn(email: string, password = PASSWORD) {
-  const response = await post("/sign-in/email", { email, password }, { ip: nextIp() });
-  return { response, cookie: response.status === 200 ? cookieFrom(response) : null };
+  const response = await post(
+    "/sign-in/email",
+    { email, password },
+    { ip: nextIp() },
+  );
+  return {
+    response,
+    cookie: response.status === 200 ? cookieFrom(response) : null,
+  };
 }
 
 export const headersFor = (cookie: string | null | undefined) =>

@@ -25,13 +25,20 @@ import {
 } from "./harness";
 
 async function userRow(id: string) {
-  const [row] = await database.select().from(schema.user).where(eq(schema.user.id, id));
+  const [row] = await database
+    .select()
+    .from(schema.user)
+    .where(eq(schema.user.id, id));
   return row;
 }
 
 async function sessionCount(userId: string) {
-  return (await database.select().from(schema.session).where(eq(schema.session.userId, userId)))
-    .length;
+  return (
+    await database
+      .select()
+      .from(schema.session)
+      .where(eq(schema.session.userId, userId))
+  ).length;
 }
 
 async function hasUser(email: string) {
@@ -50,12 +57,18 @@ function commands(caller: Caller, target: { id: string }, newEmail: string) {
         password: PASSWORD,
         role: "agent",
       }),
-    setStaffRole: () => setStaffRole(auth, caller, { userId: target.id, role: "admin" }),
-    banStaff: () => banStaff(auth, caller, { userId: target.id, reason: "test" }),
+    setStaffRole: () =>
+      setStaffRole(auth, caller, { userId: target.id, role: "admin" }),
+    banStaff: () =>
+      banStaff(auth, caller, { userId: target.id, reason: "test" }),
     unbanStaff: () => unbanStaff(auth, caller, { userId: target.id }),
-    revokeStaffSessions: () => revokeStaffSessions(auth, caller, { userId: target.id }),
+    revokeStaffSessions: () =>
+      revokeStaffSessions(auth, caller, { userId: target.id }),
     resetStaffPassword: () =>
-      resetStaffPassword(auth, caller, { userId: target.id, password: "an-attackers-password" }),
+      resetStaffPassword(auth, caller, {
+        userId: target.id,
+        password: "an-attackers-password",
+      }),
   };
 }
 
@@ -65,7 +78,10 @@ async function setup() {
   return { victim, newEmail: uniqueEmail("created") };
 }
 
-async function expectUntouched(victim: { id: string; email: string }, newEmail: string) {
+async function expectUntouched(
+  victim: { id: string; email: string },
+  newEmail: string,
+) {
   expect(await hasUser(newEmail)).toBe(false);
   expect((await userRow(victim.id))?.role).toBe("agent");
   expect((await userRow(victim.id))?.banned).toBe(false);
@@ -77,7 +93,10 @@ describe("staff commands are refused by Better Auth when the caller is not an ad
   // The server actions call requireAdmin() before any of this. These tests show
   // the second check holds on its own, for every command.
   test.each([
-    ["no session", async () => ({ headers: headersFor(null), userId: "nobody" })],
+    [
+      "no session",
+      async () => ({ headers: headersFor(null), userId: "nobody" }),
+    ],
     [
       "an agent session",
       async () => {
@@ -89,7 +108,9 @@ describe("staff commands are refused by Better Auth when the caller is not an ad
     const caller = await makeCaller();
     const { victim, newEmail } = await setup();
 
-    for (const [name, run] of Object.entries(commands(caller, victim, newEmail))) {
+    for (const [name, run] of Object.entries(
+      commands(caller, victim, newEmail),
+    )) {
       expect({ name, ...(await run()) }).toMatchObject({ name, ok: false });
     }
     await expectUntouched(victim, newEmail);
@@ -119,7 +140,9 @@ describe("staff commands for an admin", () => {
     expect(row?.role).toBe("agent");
     expect(row?.name).toBe("New Agent");
     expect(row?.mustChangePassword).toBe(true);
-    expect((await signIn(newEmail, "temporary-password")).response.status).toBe(200);
+    expect((await signIn(newEmail, "temporary-password")).response.status).toBe(
+      200,
+    );
   });
 
   test("set a role, ban, unban, revoke and reset", async () => {
@@ -127,23 +150,34 @@ describe("staff commands for an admin", () => {
     const caller = { headers: admin.headers, userId: admin.id };
     const { victim } = await setup();
 
-    expect(await setStaffRole(auth, caller, { userId: victim.id, role: "admin" })).toEqual({
+    expect(
+      await setStaffRole(auth, caller, { userId: victim.id, role: "admin" }),
+    ).toEqual({
       ok: true,
     });
     expect((await userRow(victim.id))?.role).toBe("admin");
-    expect(await setStaffRole(auth, caller, { userId: victim.id, role: "agent" })).toEqual({
+    expect(
+      await setStaffRole(auth, caller, { userId: victim.id, role: "agent" }),
+    ).toEqual({
       ok: true,
     });
 
-    expect(await revokeStaffSessions(auth, caller, { userId: victim.id })).toEqual({ ok: true });
+    expect(
+      await revokeStaffSessions(auth, caller, { userId: victim.id }),
+    ).toEqual({ ok: true });
     expect(await sessionCount(victim.id)).toBe(0);
 
-    const banned = await banStaff(auth, caller, { userId: victim.id, reason: "left the company" });
+    const banned = await banStaff(auth, caller, {
+      userId: victim.id,
+      reason: "left the company",
+    });
     expect(banned).toEqual({ ok: true });
     expect((await userRow(victim.id))?.banned).toBe(true);
     expect((await signIn(victim.email)).response.status).toBe(403);
 
-    expect(await unbanStaff(auth, caller, { userId: victim.id })).toEqual({ ok: true });
+    expect(await unbanStaff(auth, caller, { userId: victim.id })).toEqual({
+      ok: true,
+    });
     expect((await userRow(victim.id))?.banned).toBe(false);
 
     const reset = await resetStaffPassword(auth, caller, {
@@ -153,22 +187,33 @@ describe("staff commands for an admin", () => {
     expect(reset).toEqual({ ok: true });
     expect((await userRow(victim.id))?.mustChangePassword).toBe(true);
     expect((await signIn(victim.email)).response.status).toBe(401);
-    expect((await signIn(victim.email, "another-temp-password")).response.status).toBe(200);
+    expect(
+      (await signIn(victim.email, "another-temp-password")).response.status,
+    ).toBe(200);
   });
 
   test("an admin cannot lock themselves out", async () => {
     const admin = await signedInAs("admin");
     const caller = { headers: admin.headers, userId: admin.id };
 
-    expect(await setStaffRole(auth, caller, { userId: admin.id, role: "agent" })).toMatchObject({
+    expect(
+      await setStaffRole(auth, caller, { userId: admin.id, role: "agent" }),
+    ).toMatchObject({
       ok: false,
     });
-    expect(await banStaff(auth, caller, { userId: admin.id })).toMatchObject({ ok: false });
-    expect(await revokeStaffSessions(auth, caller, { userId: admin.id })).toMatchObject({
+    expect(await banStaff(auth, caller, { userId: admin.id })).toMatchObject({
       ok: false,
     });
     expect(
-      await resetStaffPassword(auth, caller, { userId: admin.id, password: PASSWORD }),
+      await revokeStaffSessions(auth, caller, { userId: admin.id }),
+    ).toMatchObject({
+      ok: false,
+    });
+    expect(
+      await resetStaffPassword(auth, caller, {
+        userId: admin.id,
+        password: PASSWORD,
+      }),
     ).toMatchObject({ ok: false });
     expect((await userRow(admin.id))?.role).toBe("admin");
     expect((await userRow(admin.id))?.banned).toBe(false);
@@ -178,7 +223,12 @@ describe("staff commands for an admin", () => {
     const admin = await signedInAs("admin");
     const caller = { headers: admin.headers, userId: admin.id };
     const { victim, newEmail } = await setup();
-    const base = { name: "New", email: newEmail, password: PASSWORD, role: "agent" };
+    const base = {
+      name: "New",
+      email: newEmail,
+      password: PASSWORD,
+      role: "agent",
+    };
 
     for (const input of [
       undefined,
@@ -197,7 +247,9 @@ describe("staff commands for an admin", () => {
       { ...base, role: "user" },
       { ...base, role: ["admin"] },
     ]) {
-      expect(await createStaff(auth, caller, input)).toMatchObject({ ok: false });
+      expect(await createStaff(auth, caller, input)).toMatchObject({
+        ok: false,
+      });
     }
     expect(await hasUser(newEmail)).toBe(false);
 
@@ -205,11 +257,17 @@ describe("staff commands for an admin", () => {
       await setStaffRole(auth, caller, { userId: victim.id, role: "root" }),
       await setStaffRole(auth, caller, { userId: "", role: "agent" }),
       await setStaffRole(auth, caller, { role: "agent" }),
-      await banStaff(auth, caller, { userId: victim.id, reason: "r".repeat(201) }),
+      await banStaff(auth, caller, {
+        userId: victim.id,
+        reason: "r".repeat(201),
+      }),
       await banStaff(auth, caller, { userId: 7 }),
       await unbanStaff(auth, caller, {}),
       await revokeStaffSessions(auth, caller, null),
-      await resetStaffPassword(auth, caller, { userId: victim.id, password: "short" }),
+      await resetStaffPassword(auth, caller, {
+        userId: victim.id,
+        password: "short",
+      }),
     ];
     for (const result of bad) expect(result).toMatchObject({ ok: false });
 
@@ -221,9 +279,16 @@ describe("staff commands for an admin", () => {
   test("Better Auth refusals come back as an error result", async () => {
     const admin = await signedInAs("admin");
     const caller = { headers: admin.headers, userId: admin.id };
-    const input = { name: "Dup", email: uniqueEmail("dup"), password: PASSWORD, role: "agent" };
+    const input = {
+      name: "Dup",
+      email: uniqueEmail("dup"),
+      password: PASSWORD,
+      role: "agent",
+    };
     expect(await createStaff(auth, caller, input)).toEqual({ ok: true });
     expect(await createStaff(auth, caller, input)).toMatchObject({ ok: false });
-    expect(await banStaff(auth, caller, { userId: "no-such-user" })).toMatchObject({ ok: false });
+    expect(
+      await banStaff(auth, caller, { userId: "no-such-user" }),
+    ).toMatchObject({ ok: false });
   });
 });

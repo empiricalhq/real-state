@@ -6,9 +6,13 @@ import { cache } from "react";
 import { checkAdmin, checkStaff } from "@/lib/access";
 import { auth } from "@/lib/auth";
 
-const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
+const getSession = cache(async () =>
+  auth.api.getSession({ headers: await headers() }),
+);
 
-export async function requireStaff(options: { allowPasswordChange?: boolean } = {}) {
+export async function requireStaff(
+  options: { allowPasswordChange?: boolean } = {},
+) {
   const access = checkStaff(await getSession(), options);
   if (!access.ok) redirect(access.redirect);
   return access.session;

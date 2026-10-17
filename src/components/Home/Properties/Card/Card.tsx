@@ -26,7 +26,12 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
             )}
           </Link>
           <div className="absolute top-6 right-6 hidden rounded-full bg-white p-4 group-hover:block">
-            <Icon icon={"solar:arrow-right-linear"} width={24} height={24} className="text-black" />
+            <Icon
+              icon={"solar:arrow-right-linear"}
+              width={24}
+              height={24}
+              className="text-black"
+            />
           </div>
         </div>
         <div className="p-6">
@@ -37,7 +42,9 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
                   {name}
                 </h3>
               </Link>
-              <p className="text-base font-normal text-black/50 dark:text-white/50">{location}</p>
+              <p className="text-base font-normal text-black/50 dark:text-white/50">
+                {location}
+              </p>
             </div>
             <div>
               <button className="text-primary bg-primary/10 rounded-full px-5 py-2 text-base font-normal">
@@ -59,7 +66,11 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
               </p>
             </div>
             <div className="xs:pl-4 mobile:pl-8 flex flex-col gap-2 pl-2">
-              <Icon icon={"lineicons:arrow-all-direction"} width={20} height={20} />
+              <Icon
+                icon={"lineicons:arrow-all-direction"}
+                width={20}
+                height={20}
+              />
               <p className="mobile:text-base text-sm font-normal text-black dark:text-white">
                 {area}m<sup>2</sup>
               </p>

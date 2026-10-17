@@ -22,9 +22,13 @@ export function readAuthSecret(env: Env = process.env): string | undefined {
 }
 
 function assertRequired(env: Env) {
-  const missing = ["BETTER_AUTH_SECRET", "DATABASE_URL"].filter((name) => !env[name]?.trim());
+  const missing = ["BETTER_AUTH_SECRET", "DATABASE_URL"].filter(
+    (name) => !env[name]?.trim(),
+  );
   if (missing.length > 0) {
-    throw new Error(`Missing required environment variables: ${missing.join(", ")}.`);
+    throw new Error(
+      `Missing required environment variables: ${missing.join(", ")}.`,
+    );
   }
 }
 

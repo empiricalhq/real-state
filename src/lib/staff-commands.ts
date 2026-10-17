@@ -33,7 +33,9 @@ export async function createStaff(
   const parsed = parseCreateStaff(input);
   if (!parsed.ok) return parsed;
 
-  return run(() => auth.api.createUser({ headers: caller.headers, body: parsed.value }));
+  return run(() =>
+    auth.api.createUser({ headers: caller.headers, body: parsed.value }),
+  );
 }
 
 export async function setStaffRole(
@@ -47,10 +49,16 @@ export async function setStaffRole(
     return { ok: false, error: "You cannot change your own role." };
   }
 
-  return run(() => auth.api.setRole({ headers: caller.headers, body: parsed.value }));
+  return run(() =>
+    auth.api.setRole({ headers: caller.headers, body: parsed.value }),
+  );
 }
 
-export async function banStaff(auth: Auth, caller: Caller, input: unknown): Promise<CommandResult> {
+export async function banStaff(
+  auth: Auth,
+  caller: Caller,
+  input: unknown,
+): Promise<CommandResult> {
   const parsed = parseBan(input);
   if (!parsed.ok) return parsed;
   if (parsed.value.userId === caller.userId) {
@@ -73,7 +81,9 @@ export async function unbanStaff(
   const parsed = parseUserId(input);
   if (!parsed.ok) return parsed;
 
-  return run(() => auth.api.unbanUser({ headers: caller.headers, body: parsed.value }));
+  return run(() =>
+    auth.api.unbanUser({ headers: caller.headers, body: parsed.value }),
+  );
 }
 
 export async function revokeStaffSessions(
@@ -84,10 +94,18 @@ export async function revokeStaffSessions(
   const parsed = parseUserId(input);
   if (!parsed.ok) return parsed;
   if (parsed.value.userId === caller.userId) {
-    return { ok: false, error: "Sign out instead of revoking your own sessions." };
+    return {
+      ok: false,
+      error: "Sign out instead of revoking your own sessions.",
+    };
   }
 
-  return run(() => auth.api.revokeUserSessions({ headers: caller.headers, body: parsed.value }));
+  return run(() =>
+    auth.api.revokeUserSessions({
+      headers: caller.headers,
+      body: parsed.value,
+    }),
+  );
 }
 
 export async function resetStaffPassword(
@@ -98,7 +116,10 @@ export async function resetStaffPassword(
   const parsed = parseResetPassword(input);
   if (!parsed.ok) return parsed;
   if (parsed.value.userId === caller.userId) {
-    return { ok: false, error: "Change your own password from the change password page." };
+    return {
+      ok: false,
+      error: "Change your own password from the change password page.",
+    };
   }
 
   return run(() =>

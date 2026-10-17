@@ -13,12 +13,19 @@ export const metadata: Metadata = {
 
 const linkClass = "text-primary underline-offset-4 hover:underline";
 
-export default async function StaffPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function StaffPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = await requireAdmin();
   const params = await searchParams;
   const page = parsePage(params.page);
 
-  const { users, total } = await listStaffPage(PAGE_SIZE, (page - 1) * PAGE_SIZE);
+  const { users, total } = await listStaffPage(
+    PAGE_SIZE,
+    (page - 1) * PAGE_SIZE,
+  );
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const staff: StaffRow[] = users.map((user) => ({
@@ -33,7 +40,9 @@ export default async function StaffPage({ searchParams }: { searchParams: Promis
 
   return (
     <div>
-      <h1 className="text-dark mb-8 text-4xl font-semibold dark:text-white">Staff</h1>
+      <h1 className="text-dark mb-8 text-4xl font-semibold dark:text-white">
+        Staff
+      </h1>
       <StaffManager staff={staff} currentUserId={session.user.id} />
       {page > pageCount ? (
         <p className="text-dark mt-8 dark:text-white">
@@ -48,7 +57,11 @@ export default async function StaffPage({ searchParams }: { searchParams: Promis
           className="text-dark mt-8 flex items-center gap-6 dark:text-white"
         >
           {page > 1 && (
-            <Link className={linkClass} rel="prev" href={pageHref(params, page - 1)}>
+            <Link
+              className={linkClass}
+              rel="prev"
+              href={pageHref(params, page - 1)}
+            >
               Previous
             </Link>
           )}
@@ -56,7 +69,11 @@ export default async function StaffPage({ searchParams }: { searchParams: Promis
             Page {page} of {pageCount} · {total} staff
           </span>
           {page < pageCount && (
-            <Link className={linkClass} rel="next" href={pageHref(params, page + 1)}>
+            <Link
+              className={linkClass}
+              rel="next"
+              href={pageHref(params, page + 1)}
+            >
               Next
             </Link>
           )}

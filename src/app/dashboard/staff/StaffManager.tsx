@@ -37,9 +37,18 @@ export default function StaffManager({
   currentUserId: string;
 }) {
   const [pending, startTransition] = useTransition();
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "agent" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "agent",
+  });
 
-  const perform = (action: () => Promise<ActionResult>, success: string, onDone?: () => void) => {
+  const perform = (
+    action: () => Promise<ActionResult>,
+    success: string,
+    onDone?: () => void,
+  ) => {
     startTransition(async () => {
       const result = await action();
       if (result.ok) {
@@ -65,7 +74,10 @@ export default function StaffManager({
   const ban = (user: StaffRow) => {
     const reason = window.prompt(`Ban ${user.email}? Optional reason:`);
     if (reason === null) return;
-    perform(() => banStaffAction({ userId: user.id, reason }), "Banned. Sessions revoked.");
+    perform(
+      () => banStaffAction({ userId: user.id, reason }),
+      "Banned. Sessions revoked.",
+    );
   };
 
   return (
@@ -145,7 +157,10 @@ export default function StaffManager({
             {staff.map((user) => {
               const isSelf = user.id === currentUserId;
               return (
-                <tr key={user.id} className="border-b border-black/10 dark:border-white/20">
+                <tr
+                  key={user.id}
+                  className="border-b border-black/10 dark:border-white/20"
+                >
                   <td className="py-3 pr-4">{user.name}</td>
                   <td className="py-3 pr-4">{user.email}</td>
                   <td className="py-3 pr-4">
@@ -156,7 +171,11 @@ export default function StaffManager({
                       disabled={pending || isSelf}
                       onChange={(e) =>
                         perform(
-                          () => setStaffRoleAction({ userId: user.id, role: e.target.value }),
+                          () =>
+                            setStaffRoleAction({
+                              userId: user.id,
+                              role: e.target.value,
+                            }),
                           "Role updated.",
                         )
                       }
@@ -174,7 +193,9 @@ export default function StaffManager({
                   </td>
                   <td className="flex flex-wrap gap-2 py-3">
                     {isSelf ? (
-                      <span className="text-dark/60 dark:text-white/60">You</span>
+                      <span className="text-dark/60 dark:text-white/60">
+                        You
+                      </span>
                     ) : (
                       <>
                         {user.banned ? (
@@ -183,7 +204,10 @@ export default function StaffManager({
                             className={buttonClass}
                             disabled={pending}
                             onClick={() =>
-                              perform(() => unbanStaffAction({ userId: user.id }), "Unbanned.")
+                              perform(
+                                () => unbanStaffAction({ userId: user.id }),
+                                "Unbanned.",
+                              )
                             }
                           >
                             Unban
@@ -204,7 +228,8 @@ export default function StaffManager({
                           disabled={pending}
                           onClick={() =>
                             perform(
-                              () => revokeStaffSessionsAction({ userId: user.id }),
+                              () =>
+                                revokeStaffSessionsAction({ userId: user.id }),
                               "Sessions revoked.",
                             )
                           }

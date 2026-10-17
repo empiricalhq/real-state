@@ -11,7 +11,9 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1 className="text-dark text-4xl font-semibold dark:text-white">Hello, {user.name}</h1>
+      <h1 className="text-dark text-4xl font-semibold dark:text-white">
+        Hello, {user.name}
+      </h1>
       <p className="text-dark/70 mt-3 text-lg dark:text-white/70">
         You are signed in as <span className="font-semibold">{user.role}</span>.
       </p>

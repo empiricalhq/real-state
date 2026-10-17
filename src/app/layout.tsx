@@ -31,7 +31,11 @@ export default function RootLayout({
     >
       <body className={`${font.className} bg-white antialiased dark:bg-black`}>
         <NextTopLoader color="#07be8a" />
-        <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
+        <ThemeProvider
+          attribute="class"
+          enableSystem={true}
+          defaultTheme="light"
+        >
           <Header />
           {children}
           <Footer />

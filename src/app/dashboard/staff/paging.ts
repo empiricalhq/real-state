@@ -15,7 +15,11 @@ export function pageHref(params: SearchParams, page: number) {
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (key === "page") continue;
-    for (const item of Array.isArray(value) ? value : value === undefined ? [] : [value]) {
+    for (const item of Array.isArray(value)
+      ? value
+      : value === undefined
+        ? []
+        : [value]) {
       query.append(key, item);
     }
   }

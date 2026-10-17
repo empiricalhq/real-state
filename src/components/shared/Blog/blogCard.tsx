@@ -38,7 +38,9 @@ const BlogCard: FC<{ blog: Blog }> = ({ blog }) => {
           </span>
         </div>
         <div className="bg-dark/5 rounded-full px-5 py-2.5 dark:bg-white/15">
-          <p className="text-dark text-sm font-semibold dark:text-white">{tag}</p>
+          <p className="text-dark text-sm font-semibold dark:text-white">
+            {tag}
+          </p>
         </div>
       </div>
     </Link>

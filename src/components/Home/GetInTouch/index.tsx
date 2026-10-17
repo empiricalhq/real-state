@@ -21,7 +21,8 @@ const GetInTouch: React.FC = () => {
           <div className="bg-black/30 py-10 md:py-28 lg:py-64">
             <div className="flex flex-col items-center gap-8">
               <h2 className="lg:text-52 md:text-40 max-w-3/4 text-center text-3xl font-medium text-white">
-                Enter a realm where exquisite design and timeless luxury come together.
+                Enter a realm where exquisite design and timeless luxury come
+                together.
               </h2>
               <Link
                 href="#"

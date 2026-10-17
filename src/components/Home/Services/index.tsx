@@ -31,15 +31,18 @@ const Categories = () => {
         <div className="grid grid-cols-12 items-center gap-10">
           <div className="col-span-12 lg:col-span-6">
             <p className="text-dark/75 flex gap-2.5 text-base font-semibold dark:text-white/75">
-              <Icon icon="ph:house-simple-fill" className="text-primary text-2xl" />
+              <Icon
+                icon="ph:house-simple-fill"
+                className="text-primary text-2xl"
+              />
               Categories
             </p>
             <h2 className="lg:text-52 text-40 text-dark mt-4 mb-2 leading-[1.2] font-medium lg:max-w-full dark:text-white">
               Explore best properties with expert services.
             </h2>
             <p className="text-dark/50 text-lg leading-[1.3] md:max-w-3/4 lg:max-w-full dark:text-white/50">
-              Discover a diverse range of premium properties, from luxurious apartments to spacious
-              villas, tailored to your needs
+              Discover a diverse range of premium properties, from luxurious
+              apartments to spacious villas, tailored to your needs
             </p>
             <Link
               href="/properties"
@@ -73,8 +76,8 @@ const Categories = () => {
                 <div className="flex flex-col gap-2.5">
                   <h3 className="text-2xl text-white">Residential Homes</h3>
                   <p className="text-base leading-6 text-white/80">
-                    Experience elegance and comfort with our exclusive luxury villas, designed for
-                    sophisticated living.
+                    Experience elegance and comfort with our exclusive luxury
+                    villas, designed for sophisticated living.
                   </p>
                 </div>
               </Link>
@@ -105,8 +108,8 @@ const Categories = () => {
                 <div className="flex flex-col gap-2.5">
                   <h3 className="text-2xl text-white">Luxury villas</h3>
                   <p className="text-base leading-6 text-white/80">
-                    Experience elegance and comfort with our exclusive luxury villas, designed for
-                    sophisticated living.
+                    Experience elegance and comfort with our exclusive luxury
+                    villas, designed for sophisticated living.
                   </p>
                 </div>
               </Link>
@@ -137,8 +140,8 @@ const Categories = () => {
                 <div className="flex flex-col gap-2.5">
                   <h3 className="text-2xl text-white">Appartment</h3>
                   <p className="text-base leading-6 text-white/80">
-                    Experience elegance and comfort with our exclusive luxury villas, designed for
-                    sophisticated living.
+                    Experience elegance and comfort with our exclusive luxury
+                    villas, designed for sophisticated living.
                   </p>
                 </div>
               </Link>
@@ -169,8 +172,8 @@ const Categories = () => {
                 <div className="flex flex-col gap-2.5">
                   <h3 className="text-2xl text-white">Office Spaces</h3>
                   <p className="text-base leading-6 text-white/80">
-                    Experience elegance and comfort with our exclusive luxury villas, designed for
-                    sophisticated living.
+                    Experience elegance and comfort with our exclusive luxury
+                    villas, designed for sophisticated living.
                   </p>
                 </div>
               </Link>

@@ -11,7 +11,11 @@ if (!email || !password) {
 }
 
 try {
-  const admin = await seedAdmin(db, { email, password, name: process.env.SEED_ADMIN_NAME });
+  const admin = await seedAdmin(db, {
+    email,
+    password,
+    name: process.env.SEED_ADMIN_NAME,
+  });
   console.log(`Created admin ${admin.email}.`);
 } catch (error) {
   console.error(error instanceof SeedAdminError ? error.message : error);

@@ -6,5 +6,7 @@ export const MIN_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_LENGTH = 128;
 
 export function isRole(value: unknown): value is Role {
-  return typeof value === "string" && (ROLES as readonly string[]).includes(value);
+  return (
+    typeof value === "string" && (ROLES as readonly string[]).includes(value)
+  );
 }

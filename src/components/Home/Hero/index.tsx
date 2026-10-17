@@ -55,7 +55,9 @@ const Hero: React.FC = () => {
                 className="hidden dark:block"
                 unoptimized={true}
               />
-              <p className="text-sm font-normal text-inherit sm:text-base">4 Bedrooms</p>
+              <p className="text-sm font-normal text-inherit sm:text-base">
+                4 Bedrooms
+              </p>
             </div>
             <div className="flex flex-col gap-3 sm:items-center">
               <Image
@@ -74,7 +76,9 @@ const Hero: React.FC = () => {
                 className="hidden dark:block"
                 unoptimized={true}
               />
-              <p className="text-sm font-normal text-inherit sm:text-base">4 Restroom</p>
+              <p className="text-sm font-normal text-inherit sm:text-base">
+                4 Restroom
+              </p>
             </div>
             <div className="flex flex-col gap-3 sm:items-center">
               <Image
@@ -93,10 +97,14 @@ const Hero: React.FC = () => {
                 className="hidden dark:block"
                 unoptimized={true}
               />
-              <p className="text-sm font-normal text-inherit sm:text-base">Parking space</p>
+              <p className="text-sm font-normal text-inherit sm:text-base">
+                Parking space
+              </p>
             </div>
             <div className="flex flex-col gap-3 sm:items-center">
-              <p className="text-2xl font-medium text-inherit sm:text-3xl">$4,750,000</p>
+              <p className="text-2xl font-medium text-inherit sm:text-3xl">
+                $4,750,000
+              </p>
               <p className="text-sm font-normal text-black/50 sm:text-base dark:text-white/50">
                 For selling price
               </p>

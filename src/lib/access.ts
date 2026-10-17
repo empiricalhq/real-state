@@ -1,8 +1,12 @@
 import type { Auth } from "@/lib/auth";
 import { isRole } from "@/lib/roles";
 
-export type Session = NonNullable<Awaited<ReturnType<Auth["api"]["getSession"]>>>;
-export type Access = { ok: true; session: Session } | { ok: false; redirect: string };
+export type Session = NonNullable<
+  Awaited<ReturnType<Auth["api"]["getSession"]>>
+>;
+export type Access =
+  | { ok: true; session: Session }
+  | { ok: false; redirect: string };
 
 // A ban deletes the user's sessions, so a banned user normally has none. This
 // check also refuses a banned user whose session row survives.
@@ -31,5 +35,7 @@ export function checkAdmin(session: Session | null): Access {
   const access = checkStaff(session);
   if (!access.ok) return access;
 
-  return access.session.user.role === "admin" ? access : { ok: false, redirect: "/dashboard" };
+  return access.session.user.role === "admin"
+    ? access
+    : { ok: false, redirect: "/dashboard" };
 }

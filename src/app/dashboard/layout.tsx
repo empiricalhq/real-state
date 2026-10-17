@@ -3,7 +3,11 @@ import Link from "next/link";
 import Toaster from "@/components/shared/Toaster";
 import { requireStaff } from "@/lib/dal";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await requireStaff();
 
   return (

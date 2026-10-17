@@ -27,34 +27,72 @@ function done(result: CommandResult) {
 
 export async function createStaffAction(input: unknown): Promise<ActionResult> {
   const admin = await requireAdmin();
-  return done(await createStaff(auth, { headers: await headers(), userId: admin.user.id }, input));
+  return done(
+    await createStaff(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
+  );
 }
 
-export async function setStaffRoleAction(input: unknown): Promise<ActionResult> {
+export async function setStaffRoleAction(
+  input: unknown,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
-  return done(await setStaffRole(auth, { headers: await headers(), userId: admin.user.id }, input));
+  return done(
+    await setStaffRole(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
+  );
 }
 
 export async function banStaffAction(input: unknown): Promise<ActionResult> {
   const admin = await requireAdmin();
-  return done(await banStaff(auth, { headers: await headers(), userId: admin.user.id }, input));
+  return done(
+    await banStaff(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
+  );
 }
 
 export async function unbanStaffAction(input: unknown): Promise<ActionResult> {
   const admin = await requireAdmin();
-  return done(await unbanStaff(auth, { headers: await headers(), userId: admin.user.id }, input));
-}
-
-export async function revokeStaffSessionsAction(input: unknown): Promise<ActionResult> {
-  const admin = await requireAdmin();
   return done(
-    await revokeStaffSessions(auth, { headers: await headers(), userId: admin.user.id }, input),
+    await unbanStaff(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
   );
 }
 
-export async function resetStaffPasswordAction(input: unknown): Promise<ActionResult> {
+export async function revokeStaffSessionsAction(
+  input: unknown,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   return done(
-    await resetStaffPassword(auth, { headers: await headers(), userId: admin.user.id }, input),
+    await revokeStaffSessions(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
+  );
+}
+
+export async function resetStaffPasswordAction(
+  input: unknown,
+): Promise<ActionResult> {
+  const admin = await requireAdmin();
+  return done(
+    await resetStaffPassword(
+      auth,
+      { headers: await headers(), userId: admin.user.id },
+      input,
+    ),
   );
 }

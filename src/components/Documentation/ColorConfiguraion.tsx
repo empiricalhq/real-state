@@ -1,10 +1,15 @@
 export const ColorConfiguration = () => {
   return (
     <>
-      <h3 className="mt-8 text-xl font-semibold text-black dark:text-white">Colors</h3>
+      <h3 className="mt-8 text-xl font-semibold text-black dark:text-white">
+        Colors
+      </h3>
       <div className="mt-4 rounded-md border border-black/10 p-6 dark:border-white/20">
         <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
-          <span className="text-lg font-semibold dark:text-white">1. Override Colors</span> <br />
+          <span className="text-lg font-semibold dark:text-white">
+            1. Override Colors
+          </span>{" "}
+          <br />
           For any change in colors : \src\app\globals.css
         </p>
         <div className="mt-8 rounded-md bg-black px-5 py-4">
@@ -18,7 +23,9 @@ export const ColorConfiguration = () => {
       </div>
       <div className="mt-4 rounded-md border border-black/10 p-6 dark:border-white/20">
         <p className="text-midnight_text dark:text-opacity-50 text-base font-medium dark:text-white">
-          <span className="text-lg font-semibold dark:text-white">2. Override Theme Colors</span>{" "}
+          <span className="text-lg font-semibold dark:text-white">
+            2. Override Theme Colors
+          </span>{" "}
           <br />
           For change , go to : \src\app\globals.css
         </p>

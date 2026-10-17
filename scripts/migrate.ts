@@ -15,7 +15,10 @@ try {
   await migrate(drizzle(pool), { migrationsFolder: "./drizzle" });
   console.log("Migrations applied.");
 } catch (error) {
-  console.error("Migration failed:", error instanceof Error ? error.message : error);
+  console.error(
+    "Migration failed:",
+    error instanceof Error ? error.message : error,
+  );
   process.exitCode = 1;
 } finally {
   await pool.end();
