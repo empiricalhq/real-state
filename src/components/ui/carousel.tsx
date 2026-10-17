@@ -1,6 +1,8 @@
 "use client";
 
-import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
+import useEmblaCarousel, {
+  type UseEmblaCarouselType,
+} from "embla-carousel-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -11,20 +13,18 @@ type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
 type CarouselProps = {
+  // A section is a region landmark only when it has a name.
+  "aria-label": string;
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
-  setApi?: (api: CarouselApi) => void;
+  onApiChange?: (api: CarouselApi) => void;
 };
 
 type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0];
-  api: ReturnType<typeof useEmblaCarousel>[1];
-  scrollPrev: () => void;
-  scrollNext: () => void;
-  canScrollPrev: boolean;
-  canScrollNext: boolean;
-} & CarouselProps;
+  orientation: "horizontal" | "vertical";
+};
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
@@ -38,15 +38,41 @@ function useCarousel() {
   return context;
 }
 
+function useCarouselSelection(api: CarouselApi) {
+  const subscribe = React.useCallback(
+    (notify: () => void) => {
+      if (!api) return () => undefined;
+      api.on("select", notify);
+      api.on("reInit", notify);
+      return () => {
+        api.off("select", notify);
+        api.off("reInit", notify);
+      };
+    },
+    [api],
+  );
+  const selected = React.useSyncExternalStore(
+    subscribe,
+    () => api?.selectedScrollSnap() ?? 0,
+    () => 0,
+  );
+  const count = React.useSyncExternalStore(
+    subscribe,
+    () => api?.scrollSnapList().length ?? 0,
+    () => 0,
+  );
+  return { selected, count };
+}
+
 function Carousel({
   orientation = "horizontal",
   opts,
-  setApi,
+  onApiChange,
   plugins,
   className,
   children,
   ...props
-}: React.ComponentProps<"div"> & CarouselProps) {
+}: React.ComponentProps<"section"> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -54,75 +80,37 @@ function Carousel({
     },
     plugins,
   );
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
-  const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
-  }, []);
+  React.useEffect(() => {
+    onApiChange?.(api);
+  }, [api, onApiChange]);
 
-  const scrollPrev = React.useCallback(() => {
-    api?.scrollPrev();
-  }, [api]);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      api?.scrollPrev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      api?.scrollNext();
+    }
+  };
 
-  const scrollNext = React.useCallback(() => {
-    api?.scrollNext();
-  }, [api]);
-
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        scrollNext();
-      }
-    },
-    [scrollPrev, scrollNext],
+  const context = React.useMemo(
+    () => ({ carouselRef, orientation }),
+    [carouselRef, orientation],
   );
 
-  React.useEffect(() => {
-    if (!api || !setApi) return;
-    setApi(api);
-  }, [api, setApi]);
-
-  React.useEffect(() => {
-    if (!api) return;
-    onSelect(api);
-    api.on("reInit", onSelect);
-    api.on("select", onSelect);
-
-    return () => {
-      api?.off("select", onSelect);
-    };
-  }, [api, onSelect]);
-
   return (
-    <CarouselContext.Provider
-      value={{
-        carouselRef,
-        api: api,
-        opts,
-        orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
-        scrollPrev,
-        scrollNext,
-        canScrollPrev,
-        canScrollNext,
-      }}
-    >
-      <div
+    <CarouselContext.Provider value={context}>
+      <section
         onKeyDownCapture={handleKeyDown}
         className={cn("relative h-full", className)}
-        role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
         {...props}
       >
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   );
 }
@@ -131,7 +119,11 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="h-full overflow-hidden" data-slot="carousel-content">
+    <div
+      ref={carouselRef}
+      className="h-full overflow-hidden"
+      data-slot="carousel-content"
+    >
       <div
         className={cn(
           "inline-flex h-full w-full",
@@ -149,6 +141,9 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div
+      // The carousel pattern uses role group for each slide. Native fieldset
+      // and details elements would add unrelated semantics.
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
@@ -162,4 +157,10 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselItem };
+export {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  useCarouselSelection,
+};

@@ -10,29 +10,12 @@ import {
   CarouselContent,
   CarouselItem,
   type CarouselApi,
+  useCarouselSelection,
 } from "@/components/ui/carousel";
 
 const FeaturedProperty: React.FC = () => {
   const [api, setApi] = React.useState<CarouselApi | undefined>(undefined);
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
-  const handleDotClick = (index: number) => {
-    if (api) {
-      api.scrollTo(index);
-    }
-  };
+  const { selected, count } = useCarouselSelection(api);
 
   return (
     <section>
@@ -40,14 +23,15 @@ const FeaturedProperty: React.FC = () => {
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="relative">
             <Carousel
-              setApi={setApi}
+              aria-label="Featured properties"
+              onApiChange={setApi}
               opts={{
                 loop: true,
               }}
             >
               <CarouselContent>
-                {featuredProprty.map((item, index) => (
-                  <CarouselItem key={index}>
+                {featuredProprty.map((item) => (
+                  <CarouselItem key={item.scr}>
                     <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
                       <Image
                         src={item.scr}
@@ -63,11 +47,13 @@ const FeaturedProperty: React.FC = () => {
               </CarouselContent>
             </Carousel>
             <div className="bg-dark/50 absolute bottom-10 left-2/5 mt-4 flex justify-center gap-2.5 rounded-full px-2.5 py-2.5">
-              {Array.from({ length: count }).map((_, index) => (
+              {Array.from({ length: count }, (_, dot) => dot).map((dot) => (
                 <button
-                  key={index}
-                  onClick={() => handleDotClick(index)}
-                  className={`h-2.5 w-2.5 rounded-full ${current === index + 1 ? "bg-white" : "bg-white/50"}`}
+                  key={dot}
+                  type="button"
+                  onClick={() => api?.scrollTo(dot)}
+                  className={`h-2.5 w-2.5 rounded-full ${selected === dot ? "bg-white" : "bg-white/50"}`}
+                  aria-label={`Go to slide ${dot + 1}`}
                 />
               ))}
             </div>
@@ -75,7 +61,10 @@ const FeaturedProperty: React.FC = () => {
           <div className="flex flex-col gap-10">
             <div>
               <p className="text-dark/75 flex gap-2 text-base font-semibold dark:text-white/75">
-                <Icon icon="ph:house-simple-fill" className="text-primary text-2xl" />
+                <Icon
+                  icon="ph:house-simple-fill"
+                  className="text-primary text-2xl"
+                />
                 Featured property
               </p>
               <h2 className="lg:text-52 text-40 text-dark font-medium dark:text-white">
@@ -88,14 +77,17 @@ const FeaturedProperty: React.FC = () => {
                   height={26}
                   className="text-dark/50 dark:text-white/50"
                 />
-                <p className="text-dark/50 text-base dark:text-white/50">20 S Aurora Ave, Miami</p>
+                <p className="text-dark/50 text-base dark:text-white/50">
+                  20 S Aurora Ave, Miami
+                </p>
               </div>
             </div>
             <p className="text-dark/50 text-base dark:text-white/50">
-              Experience luxury living at modern luxe villa, located at 20 S Aurora Ave, Miami.
-              Priced at $1,650,500, this 560 ft² smart home offers 4 bedrooms, 3 bathrooms, and
-              spacious living areas. Enjoy energy efficiency, natural light, security systems,
-              outdoor spaces, and 2 bar areas—perfect for 8+ guests. Built in 2025.
+              Experience luxury living at modern luxe villa, located at 20 S
+              Aurora Ave, Miami. Priced at $1,650,500, this 560 ft² smart home
+              offers 4 bedrooms, 3 bathrooms, and spacious living areas. Enjoy
+              energy efficiency, natural light, security systems, outdoor
+              spaces, and 2 bar areas—perfect for 8+ guests. Built in 2025.
             </p>
             <div className="grid grid-cols-2 gap-10">
               <div className="flex items-center gap-4">
@@ -191,7 +183,9 @@ const FeaturedProperty: React.FC = () => {
                 Get in touch
               </Link>
               <div>
-                <h4 className="text-dark text-3xl font-medium dark:text-white">$1,650,500</h4>
+                <h4 className="text-dark text-3xl font-medium dark:text-white">
+                  $1,650,500
+                </h4>
                 <p className="text-dark/50 text-base">Discounted price</p>
               </div>
             </div>
