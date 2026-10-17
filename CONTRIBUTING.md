@@ -6,38 +6,32 @@ and deployment.
 
 ## Setup
 
-Use Bun 1.4.2, as pinned in [`mise.toml`](mise.toml), and install the locked
+[mise](https://mise.jdx.dev) installs the tools that [`mise.toml`](mise.toml)
+pins and runs every project command. Install the tools, then the locked
 dependencies:
 
 ```bash
-bun install --frozen-lockfile
+mise install
+mise run install
 ```
 
 ## Checks
 
-Run these checks before handing off a change:
+Run the checks before handing off a change. `check` runs `lint`, `typecheck`,
+`test` and `build`, and writes no tracked file:
 
 ```bash
-bun run typecheck
-bun run lint
-bun run fmt:check
-bun test
-bun run build
+mise run check
 ```
 
-Format the repository with:
+Apply the safe lint fixes and format the repository, Markdown included, with:
 
 ```bash
-bun run fmt
+mise run fix
 ```
 
-Database commands are:
-
-```bash
-bun run db:generate
-bun run db:migrate
-bun run db:seed
-```
+Run `mise tasks` for the other tasks, such as `dev` and the database commands
+`db:generate`, `db:migrate` and `db:seed`.
 
 The tests use the committed migrations and an in-process PGlite database. They
 do not use `DATABASE_URL`, network access, or real secrets.

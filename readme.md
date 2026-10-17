@@ -7,13 +7,15 @@ database stores authentication and staff records.
 
 ## Get started
 
-Install [Bun 1.4.2](mise.toml), create the local environment file, and start the
-development server:
+Install [mise](https://mise.jdx.dev), which provides the tools that
+[`mise.toml`](mise.toml) pins. Install them and the locked dependencies, create
+the local environment file, and start the development server:
 
 ```bash
-bun install --frozen-lockfile
+mise install
+mise run install
 cp .env.example .env.local
-bun dev
+mise run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the public site. To

@@ -62,7 +62,7 @@ values and run:
 ```bash
 export SEED_ADMIN_EMAIL=admin@example.com
 export SEED_ADMIN_PASSWORD='choose-a-password-with-12-or-more-characters'
-bun run db:seed
+mise run db:seed
 ```
 
 The command creates an admin only when no admin exists. It validates the email

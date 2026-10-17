@@ -3,20 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
-    "typecheck": "tsc --noEmit",
-    "test": "bun test",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun scripts/migrate.ts",
-    "db:seed": "bun scripts/seed-admin.ts"
-  },
   "dependencies": {
     "@iconify/react": "^6.0.2",
     "@vercel/analytics": "^2.0.1",
