@@ -347,6 +347,7 @@ describe("rate limiting", () => {
 
   test("/ok is served without touching the database", async () => {
     const closed = new PGlite();
+    await closed.waitReady;
     const brokenAuth = createAuth(drizzle(closed, { schema }));
     await closed.close();
 
