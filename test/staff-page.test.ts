@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { count, eq, inArray, like, or } from "drizzle-orm";
+import { asc, count, eq, inArray, like, or } from "drizzle-orm";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import * as schema from "@/db/schema";
@@ -46,7 +46,6 @@ const rowOf = (html: string, email: string) =>
 const DOMAIN = "@paging.invalid";
 
 let adminId: string;
-let seeded: { id: string; email: string }[];
 let last: { id: string; email: string };
 
 beforeAll(async () => {
@@ -75,7 +74,6 @@ beforeAll(async () => {
     };
   });
   await database.insert(schema.user).values(rows);
-  seeded = rows;
   last = rows.at(-1)!;
 });
 
@@ -169,34 +167,46 @@ describe("staff page paging", () => {
 });
 
 describe("staff page paging with equal creation times", () => {
-  // Keep this last: it gives every seeded member the same creation time.
   test("members created at the same instant are neither skipped nor repeated across pages", async () => {
-    // Every member gets one timestamp. Rows are updated in reverse id order so that
-    // heap order differs from id order.
+    // Every account in the shared database gets one timestamp, so the tie spans all
+    // three pages however many accounts other test files left behind. Rows are updated
+    // in reverse id order so that heap order differs from id order. The original
+    // timestamps are put back afterwards, so other test files see the accounts as they were.
     const same = new Date(Date.now() + 120_000);
-    for (const member of seeded.toReversed()) {
-      await database
-        .update(schema.user)
-        .set({ createdAt: same })
-        .where(eq(schema.user.id, member.id));
+    const everyone = await database
+      .select({
+        id: schema.user.id,
+        email: schema.user.email,
+        createdAt: schema.user.createdAt,
+      })
+      .from(schema.user)
+      .orderBy(asc(schema.user.id));
+    try {
+      for (const member of everyone.toReversed()) {
+        await database
+          .update(schema.user)
+          .set({ createdAt: same })
+          .where(eq(schema.user.id, member.id));
+      }
+
+      const pages = [
+        await render(),
+        await render({ page: "2" }),
+        await render({ page: "3" }),
+      ];
+      const listed = pages.flatMap(emails);
+      expect(listed.length).toBe(TOTAL);
+      expect(new Set(listed).size).toBe(TOTAL);
+
+      // Ties are broken by id, so the tied members come out in id order.
+      expect(listed).toEqual(everyone.map((member) => member.email));
+    } finally {
+      for (const member of everyone) {
+        await database
+          .update(schema.user)
+          .set({ createdAt: member.createdAt })
+          .where(eq(schema.user.id, member.id));
+      }
     }
-
-    const pages = [
-      await render(),
-      await render({ page: "2" }),
-      await render({ page: "3" }),
-    ];
-    const listed = pages.flatMap(emails);
-    expect(listed.length).toBe(TOTAL);
-    expect(new Set(listed).size).toBe(TOTAL);
-
-    // Ties are broken by id, so the tied members come out in id order.
-    const tied = listed.filter((email) => email.endsWith(DOMAIN));
-    expect(tied).toEqual(seeded.map((member) => member.email));
-    // The tied members cross at least one page boundary, or the test proves nothing.
-    const pagesWithTied = pages.filter((html) =>
-      emails(html).some((e) => e.endsWith(DOMAIN)),
-    );
-    expect(pagesWithTied.length).toBeGreaterThanOrEqual(2);
   });
 });
