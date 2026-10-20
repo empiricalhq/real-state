@@ -362,14 +362,15 @@ describe("route handler, called for real", () => {
     });
   }
 
+  const list = (cookie: string | null) =>
+    route.GET(
+      new Request("http://localhost:3000/api/auth/admin/list-users", {
+        headers: cookie ? { cookie } : {},
+      }),
+    );
+
   test("GET admin/list-users is refused with no session and with an agent session", async () => {
     const agent = await signedInAs("agent");
-    const list = (cookie: string | null) =>
-      route.GET(
-        new Request("http://localhost:3000/api/auth/admin/list-users", {
-          headers: cookie ? { cookie } : {},
-        }),
-      );
     expect((await list(null)).status).toBe(401);
     expect((await list(agent.cookie)).status).toBe(403);
     const admin = await signedInAs("admin");
