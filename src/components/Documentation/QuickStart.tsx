@@ -12,7 +12,7 @@ export const QuickStart = () => {
             mise
           </a>
           . It installs the Bun and Node.js versions the project pins in{" "}
-          <code>mise.toml</code> and runs every project command.
+          <code>mise.toml</code>.
         </p>
       </div>
       <div className="mt-6 rounded-md border border-black/10 p-6 dark:border-white/20">
@@ -26,7 +26,9 @@ export const QuickStart = () => {
             <span className="text-yellow-500">cd</span> project-folder
           </p>
           <p className="mt-2 text-sm text-gray-400">mise install</p>
-          <p className="mt-2 text-sm text-gray-400">mise run install</p>
+          <p className="mt-2 text-sm text-gray-400">
+            bun install --frozen-lockfile
+          </p>
         </div>
       </div>
       <div className="mt-6 rounded-md border border-black/10 p-6 dark:border-white/20">
@@ -36,7 +38,7 @@ export const QuickStart = () => {
         </p>
 
         <div className="rounded-md bg-black px-3 py-4">
-          <p className="text-sm text-gray-400">mise run dev</p>
+          <p className="text-sm text-gray-400">bun run dev</p>
         </div>
         <p className="text-midnight_text dark:text-opacity-50 mt-4 text-base font-medium dark:text-white">
           This command starts a local web server at{" "}
@@ -52,7 +54,7 @@ export const QuickStart = () => {
         </p>
 
         <div className="rounded-md bg-black px-3 py-4">
-          <p className="text-sm text-gray-400">mise run build</p>
+          <p className="text-sm text-gray-400">bun run build</p>
         </div>
         <p className="text-midnight_text dark:text-opacity-50 mt-6 text-base font-medium dark:text-white">
           Finally, your website is ready to be deployed.🥳

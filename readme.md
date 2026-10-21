@@ -13,9 +13,9 @@ the local environment file, and start the development server:
 
 ```bash
 mise install
-mise run install
+bun install --frozen-lockfile
 cp .env.example .env.local
-mise run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the public site. To

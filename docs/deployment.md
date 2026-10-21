@@ -14,16 +14,16 @@ See [Configuration](configuration.md) for the environment contract.
 Install the locked dependencies and verify the production build:
 
 ```bash
-mise run install
-mise run build
+bun install --frozen-lockfile
+bun run build
 ```
 
 Apply the committed migrations to the configured database before starting the
 new server:
 
 ```bash
-mise run db:migrate
-mise run start
+bun run db:migrate
+bun run start
 ```
 
 The application does not apply schema changes at startup. When the schema
@@ -31,8 +31,8 @@ changes, edit `src/db/schema.ts`, generate and review the migration, then apply
 it:
 
 ```bash
-mise run db:generate
-mise run db:migrate
+bun run db:generate
+bun run db:migrate
 ```
 
 When adding a Better Auth plugin or field, regenerate the schema with:
